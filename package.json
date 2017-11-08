@@ -1,0 +1,35 @@
+{
+  "name": "simplr-tslint",
+  "version": "0.0.1",
+  "description": "A set of TSLint rules used in SimplrJS projects.",
+  "main": "tslint.json",
+  "files": [
+    "tslint.json",
+    "README.MD",
+    "LICENSE"
+  ],
+  "author": "SimplrJS <simplr@quatrodev.com> (https://github.com/SimplrJS)",
+  "contributors": [
+    "Giedrius Grabauskas <giedrius@quatrodev.com> (https://github.com/GiedriusGrabauskas)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimplrJS/simplr-tslint.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "lint",
+    "tslint",
+    "rules",
+    "simplrjs",
+    "simplr"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SimplrJS/simplr-tslint/issues"
+  },
+  "homepage": "https://github.com/SimplrJS/simplr-tslint#readme",
+  "peerDependencies": {
+    "tslint": "^5.8.0"
+  }
+}
