@@ -13,6 +13,12 @@ Add this line in your `tslint.json` file:
     "extends": "simplr-tslint"
 }
 ```
+Or:
+```json
+{
+    "extends": ["simplr-tslint"]
+}
+```
 
 # License
 Released under the [MIT license](LICENSE).
