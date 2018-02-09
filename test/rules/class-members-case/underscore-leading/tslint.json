@@ -6,7 +6,8 @@
             [
                 {
                     "kind": "method",
-                    "format": "camel-case"
+                    "format": "camel-case",
+                    "leadingUnderscore": true
                 }
             ]
         ]
