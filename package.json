@@ -1,35 +1,46 @@
 {
-  "name": "simplr-tslint",
-  "version": "0.0.1",
-  "description": "A set of TSLint rules used in SimplrJS projects.",
-  "main": "tslint.json",
-  "files": [
-    "tslint.json",
-    "README.MD",
-    "LICENSE"
-  ],
-  "author": "SimplrJS <simplr@quatrodev.com> (https://github.com/SimplrJS)",
-  "contributors": [
-    "Giedrius Grabauskas <giedrius@quatrodev.com> (https://github.com/GiedriusGrabauskas)"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SimplrJS/simplr-tslint.git"
-  },
-  "keywords": [
-    "TypeScript",
-    "lint",
-    "tslint",
-    "rules",
-    "simplrjs",
-    "simplr"
-  ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/SimplrJS/simplr-tslint/issues"
-  },
-  "homepage": "https://github.com/SimplrJS/simplr-tslint#readme",
-  "peerDependencies": {
-    "tslint": "^5.8.0"
-  }
+    "name": "simplr-tslint",
+    "version": "0.0.1",
+    "description": "A set of TSLint rules used in SimplrJS projects.",
+    "main": "tslint.json",
+    "scripts": {
+        "build": "tsc -p .",
+        "test": "tslint --test test/rules/*/*"
+    },
+    "files": [
+        "tslint.json",
+        "README.MD",
+        "LICENSE"
+    ],
+    "author": "SimplrJS <simplr@quatrodev.com> (https://github.com/SimplrJS)",
+    "contributors": [
+        "Giedrius Grabauskas <giedrius@quatrodev.com> (https://github.com/GiedriusGrabauskas)",
+        "Martynas Žilinskas <martynas@quatrodev.com> (https://github.com/MartynasZilinskas)"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SimplrJS/simplr-tslint.git"
+    },
+    "keywords": [
+        "TypeScript",
+        "lint",
+        "tslint",
+        "rules",
+        "simplrjs",
+        "simplr"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/SimplrJS/simplr-tslint/issues"
+    },
+    "homepage": "https://github.com/SimplrJS/simplr-tslint#readme",
+    "peerDependencies": {
+        "tslint": "^5.8.0"
+    },
+    "devDependencies": {
+        "@types/change-case": "^2.3.1",
+        "@types/node": "^9.4.1",
+        "tslint": "^5.9.1",
+        "typescript": "^2.7.1"
+    }
 }
