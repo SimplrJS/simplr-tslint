@@ -2,41 +2,118 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as changeCase from "change-case";
 
-type DeclarationWithHeritageClauses = ts.Declaration & { heritageClauses?: ts.NodeArray<ts.HeritageClause> };
+enum Format {
+    None = "none",
+    CamelCase = "camel-case",
+    PascalCase = "pascal-case",
+    ConstantCase = "constant-case",
+    SnakeCase = "snake-case"
+}
 
-export class Rule extends Lint.Rules.TypedRule {
-    // FIXME: Remove this next line.
-    // tslint:disable-next-line:class-members-case
-    public static FAILURE_STRING_FACTORY(name: string, neededCase: string): string {
-        return `Declaration "${name}" format is not correct (${neededCase}).`;
+enum AccessModifier {
+    Any = "any",
+    Public = "public",
+    Private = "private",
+    Protected = "protected",
+    Static = "static"
+}
+
+enum MemberKind {
+    Getter = "getter",
+    Setter = "setter",
+    Method = "method",
+    Property = "property"
+}
+
+interface Option {
+    kind: MemberKind;
+    /**
+     * @default "any"
+     */
+    modifier?: AccessModifier;
+    /**
+     * @default "none"
+     */
+    format?: Format;
+    isStatic?: boolean;
+    leadingUnderscore?: boolean;
+}
+
+namespace FormatHelpers {
+    export function getLeadingUnderscore(text: string): string {
+        let result: string = "";
+
+        for (let i = 0; i < text.length; i++) {
+            if (text[i] !== "_") {
+                break;
+            }
+
+            result += text[i];
+        }
+
+        return result;
     }
 
-    public applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-        return this.applyWithWalker(new ClassMembersWalker(sourceFile, this.getOptions(), program));
+    export function changeFormat(format: Format, text: string, leadingUnderscore?: boolean): string {
+        const leadingUnderscoreText: string = leadingUnderscore ? getLeadingUnderscore(text) : "";
+
+        switch (format) {
+            case Format.None:
+                return text;
+            case Format.CamelCase:
+                return leadingUnderscoreText + changeCase.camelCase(text);
+            case Format.PascalCase:
+                return leadingUnderscoreText + changeCase.pascalCase(text);
+            case Format.ConstantCase:
+                return leadingUnderscoreText + changeCase.constantCase(text);
+            case Format.SnakeCase:
+                return leadingUnderscoreText + changeCase.snakeCase(text);
+        }
+    }
+
+    export function isCorrectFormat(format: Format, text: string, leadingUnderscore?: boolean): boolean {
+        return changeFormat(format, text, leadingUnderscore) === text;
     }
 }
 
-// The walker takes care of all the work.
-class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
-    public walk(sourceFile: ts.SourceFile): void {
-        const cb = (node: ts.Node): void => {
-            if (ts.isMethodDeclaration(node)) {
-                const found = this.checkMemberNameInHeritageDeclarations(
-                    node.parent as DeclarationWithHeritageClauses,
-                    node.name.getText()
-                );
+namespace Helpers {
+    export function modifierKindExistsInModifiers(modifiers: ts.NodeArray<ts.Modifier> | undefined, kind: ts.SyntaxKind): boolean {
+        if (modifiers != null) {
+            return modifiers.some(x => x.kind === kind);
+        }
 
-                if (!found) {
-                    this.checkNameNode(node.name);
+        return false;
+    }
+
+    export function resolveAccessModifierFromModifiers(modifiers?: ts.NodeArray<ts.Modifier>): AccessModifier | undefined {
+        let accessModifier: AccessModifier | undefined;
+
+        if (modifiers != null) {
+            modifiers.forEach(modifier => {
+                switch (modifier.kind) {
+                    case ts.SyntaxKind.PublicKeyword: {
+                        accessModifier = AccessModifier.Public;
+                        return;
+                    }
+                    case ts.SyntaxKind.PrivateKeyword: {
+                        accessModifier = AccessModifier.Private;
+                        return;
+                    }
+                    case ts.SyntaxKind.ProtectedKeyword: {
+                        accessModifier = AccessModifier.Protected;
+                        return;
+                    }
                 }
-            } else {
-                // Continue rescursion: call function `cb` for all children of the current node.
-                return ts.forEachChild(node, cb);
-            }
-        };
+            });
+        }
 
-        // Start recursion for all children of `sourceFile`.
-        return ts.forEachChild(sourceFile, cb);
+        return accessModifier;
+    }
+
+    export type DeclarationWithHeritageClauses = ts.Declaration & { heritageClauses?: ts.NodeArray<ts.HeritageClause> };
+
+    export function isDeclarationWithHeritageClauses(node: ts.Node): node is DeclarationWithHeritageClauses {
+        return (node as DeclarationWithHeritageClauses).heritageClauses != null;
     }
 
     /**
@@ -44,7 +121,15 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
      * @param node Node with heritage list.
      * @param targetName Name to search for in heritage list.
      */
-    private checkMemberNameInHeritageDeclarations(node: DeclarationWithHeritageClauses, targetName: string): boolean {
+    export function checkMemberNameInHeritageDeclarations(
+        typeChecker: ts.TypeChecker,
+        node: Helpers.DeclarationWithHeritageClauses | undefined,
+        targetName: string
+    ): boolean {
+        if (node == null) {
+            return false;
+        }
+
         if (node.heritageClauses == null) {
             return false;
         }
@@ -57,7 +142,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
 
             // Go through types on that heritage.
             for (const typeNode of heritage.types) {
-                const type = this.getTypeChecker().getTypeFromTypeNode(typeNode);
+                const type = typeChecker.getTypeFromTypeNode(typeNode);
                 const targetSymbol = type.getSymbol();
 
                 if (targetSymbol != null && targetSymbol.declarations != null) {
@@ -73,7 +158,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
                             }
 
                             // Go deeper to checker their heritage lists.
-                            return this.checkMemberNameInHeritageDeclarations(declaration, targetName);
+                            return checkMemberNameInHeritageDeclarations(typeChecker, declaration, targetName);
                         }
                     }
                 }
@@ -82,16 +167,89 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
 
         return false;
     }
+}
 
-    private checkNameNode(node: ts.Node): void {
+export class Rule extends Lint.Rules.TypedRule {
+    public static failureStringFactory(name: string, neededCase: string): string {
+        return `Declaration "${name}" format is not correct (${neededCase}).`;
+    }
+
+    public applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
+        return this.applyWithWalker(new ClassMembersWalker(sourceFile, this.getOptions(), program));
+    }
+}
+
+type Dictionary<TValue = any> = { [key: string]: TValue };
+
+// The walker takes care of all the work.
+class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
+    //#region Helping functions
+    private get ruleOptions(): Option[] {
+        return this.getOptions()[0] || [];
+    }
+
+    private getRuleOption(option: Partial<Option> & Dictionary): Option | undefined {
+        const options: Array<Option & Dictionary> = this.ruleOptions;
+
+        const index = options.findIndex(x => {
+            for (const key in option) {
+                if (option.hasOwnProperty(key) && option[key] === x[key]) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        return options[index];
+    }
+
+    private checkNameNode(option: Option, node: ts.Node): void {
+        const format = option.format || Format.None;
         const name = node.getText();
-        const casedName = changeCase.camelCase(name);
+        const casedName = FormatHelpers.changeFormat(format, name, option.leadingUnderscore);
+
         if (casedName !== name) {
             // create a fixer for this failure
             const fix = new Lint.Replacement(node.getStart(), node.getWidth(), casedName);
 
             // create a failure at the current position
-            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING_FACTORY(name, "camelCase"), fix));
+            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.failureStringFactory(name, format), fix));
+        }
+    }
+    //#endregion
+
+    public visitMethodSignature(node: ts.MethodSignature): void {
+        this.checkMethod(node, node.name, MemberKind.Method);
+    }
+
+    public visitMethodDeclaration(node: ts.MethodDeclaration): void {
+        this.checkMethod(node, node.name, MemberKind.Method);
+    }
+
+    private checkMethod(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
+        const searchOption: Partial<Option> = {
+            kind: kind,
+            modifier: Helpers.resolveAccessModifierFromModifiers(node.modifiers),
+            isStatic: Helpers.modifierKindExistsInModifiers(node.modifiers, ts.SyntaxKind.StaticKeyword)
+        };
+
+        const option = this.getRuleOption(searchOption);
+        if (option == null) {
+            return;
+        }
+
+        if (node.parent == null || !Helpers.isDeclarationWithHeritageClauses(node.parent)) {
+            return;
+        }
+
+        if (
+            !Helpers.checkMemberNameInHeritageDeclarations(
+                this.getProgram().getTypeChecker(),
+                node.parent as Helpers.DeclarationWithHeritageClauses,
+                name.getText()
+            )
+        ) {
+            this.checkNameNode(option, name);
         }
     }
 }
