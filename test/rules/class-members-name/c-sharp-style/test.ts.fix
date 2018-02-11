@@ -1,0 +1,25 @@
+export interface Car {
+    Name: string;
+    Year: number;
+}
+
+export class LargeCar implements Car {
+    public get Name(): string {
+        return "Large car";
+    }
+
+    public get year(): number {
+        return 1990;
+    }
+
+    private owner: string | undefined;
+    private speed: number = 0;
+
+    public GetCurrentSpeed(): number {} 
+
+    protected SetSpeed(speed: number): void {}
+
+    public Destroy(): void {}
+
+    public UpdateOwner(name: string): void {}
+}   

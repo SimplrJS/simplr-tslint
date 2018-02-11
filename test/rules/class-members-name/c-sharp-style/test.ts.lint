@@ -1,0 +1,28 @@
+export interface Car {
+    Name: string;
+    year: number;
+    ~~~~           [Declaration "year" format is not correct (pascal-case).]
+}
+
+export class LargeCar implements Car {
+    public get Name(): string {
+        return "Large car";
+    }
+
+    public get year(): number {
+        return 1990;
+    }
+
+    private owner: string | undefined;
+    private Speed: number = 0;
+            ~~~~~               [Declaration "Speed" format is not correct (camel-case).]
+
+    public GetCurrentSpeed(): number {} 
+
+    protected SetSpeed(speed: number): void {}
+
+    public Destroy(): void {}
+
+    public updateOwner(name: string): void {}
+           ~~~~~~~~~~~                         [Declaration "updateOwner" format is not correct (pascal-case).]
+}   
