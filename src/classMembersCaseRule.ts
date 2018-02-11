@@ -193,7 +193,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
 
         const index = options.findIndex(x => {
             for (const key in option) {
-                if (option.hasOwnProperty(key) && option[key] === x[key]) {
+                if ((option.hasOwnProperty(key) && option[key] === x[key]) || option[key] == null) {
                     return true;
                 }
             }
@@ -203,17 +203,17 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         return options[index];
     }
 
-    private checkNameNode(option: Option, node: ts.Node): void {
+    private checkNameNode(option: Option, nameNode: ts.Node): void {
         const format = option.format || Format.None;
-        const name = node.getText();
+        const name = nameNode.getText();
         const casedName = FormatHelpers.changeFormat(format, name, option.leadingUnderscore);
 
         if (casedName !== name) {
             // create a fixer for this failure
-            const fix = new Lint.Replacement(node.getStart(), node.getWidth(), casedName);
+            const fix = new Lint.Replacement(nameNode.getStart(), nameNode.getWidth(), casedName);
 
             // create a failure at the current position
-            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.failureStringFactory(name, format), fix));
+            this.addFailure(this.createFailure(nameNode.getStart(), nameNode.getWidth(), Rule.failureStringFactory(name, format), fix));
         }
     }
     //#endregion
@@ -238,10 +238,11 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
             return;
         }
 
-        if (node.parent == null || !Helpers.isDeclarationWithHeritageClauses(node.parent)) {
+        if (node.parent == null) {
             return;
         }
 
+        // Check if name is existing from heritage.
         if (
             !Helpers.checkMemberNameInHeritageDeclarations(
                 this.getProgram().getTypeChecker(),
