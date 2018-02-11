@@ -226,6 +226,22 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         this.checkMethod(node, node.name, MemberKind.Method);
     }
 
+    public visitPropertySignature(node: ts.PropertySignature): void {
+        this.checkMethod(node, node.name, MemberKind.Property);
+    }
+
+    public visitPropertyDeclaration(node: ts.PropertyDeclaration): void {
+        this.checkMethod(node, node.name, MemberKind.Property);
+    }
+
+    public visitGetAccessor(node: ts.GetAccessorDeclaration): void {
+        this.checkMethod(node, node.name, MemberKind.Getter);
+    }
+
+    public visitSetAccessor(node: ts.SetAccessorDeclaration): void {
+        this.checkMethod(node, node.name, MemberKind.Setter);
+    }
+
     private checkMethod(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
         const searchOption: Partial<Option> = {
             kind: kind,
