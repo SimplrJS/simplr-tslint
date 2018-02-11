@@ -5,6 +5,7 @@
     "main": "tslint.json",
     "scripts": {
         "build": "tsc -p .",
+        "watch": "tsc -p . -w",
         "test": "tslint --test test/rules/*/*"
     },
     "files": [
