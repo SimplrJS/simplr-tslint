@@ -1,13 +1,12 @@
 {
     "rulesDirectory": "../../../../rules",
     "rules": {
-        "class-members-case": [
+        "class-members-name": [
             true,
             [
                 {
                     "kind": "method",
-                    "format": "camel-case",
-                    "leadingUnderscore": true
+                    "format": "camel-case"
                 }
             ]
         ]

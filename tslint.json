@@ -1,7 +1,7 @@
 {
     "rulesDirectory": ["rules"],
     "rules": {
-        "class-members-case": true,
+        "class-members-name": true,
         "align": [true, "parameters", "statements"],
         "class-name": true,
         "comment-format": [false],
