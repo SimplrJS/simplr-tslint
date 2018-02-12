@@ -2,6 +2,8 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as changeCase from "change-case";
 
+const SKIP_ORIGIN_CHECKING = "skip-origin-checking";
+
 enum Format {
     None = "none",
     CamelCase = "camel-case",
@@ -25,7 +27,7 @@ enum MemberKind {
     Property = "property"
 }
 
-interface Option {
+interface FormatRule {
     kind: MemberKind;
     /**
      * @default "any"
@@ -37,6 +39,13 @@ interface Option {
     format?: Format;
     isStatic?: boolean;
     leadingUnderscore?: boolean;
+}
+
+interface RuleOptions {
+    skipOriginChecking: boolean;
+    defaultFormat?: Format;
+    rules: FormatRule[];
+    rawOptions: Lint.IOptions;
 }
 
 namespace FormatHelpers {
@@ -76,7 +85,7 @@ namespace FormatHelpers {
     }
 }
 
-namespace Helpers {
+namespace TsHelpers {
     export function modifierKindExistsInModifiers(modifiers: ts.NodeArray<ts.Modifier> | undefined, kind: ts.SyntaxKind): boolean {
         if (modifiers != null) {
             return modifiers.some(x => x.kind === kind);
@@ -123,7 +132,7 @@ namespace Helpers {
      */
     export function checkMemberNameInHeritageDeclarations(
         typeChecker: ts.TypeChecker,
-        node: Helpers.DeclarationWithHeritageClauses | undefined,
+        node: TsHelpers.DeclarationWithHeritageClauses | undefined,
         targetName: string
     ): boolean {
         if (node == null) {
@@ -174,8 +183,29 @@ export class Rule extends Lint.Rules.TypedRule {
         return `Declaration "${name}" format is not correct (${neededCase}).`;
     }
 
+    private parseOptions(options: Lint.IOptions): RuleOptions {
+        const defaultFormat: Format = options.ruleArguments.find(x => Format[x] != null);
+        const skipOriginChecking: boolean = options.ruleArguments.findIndex(x => x === SKIP_ORIGIN_CHECKING) !== -1;
+        const formatRules: FormatRule[] | undefined = options.ruleArguments.find(x => Array.isArray(x));
+
+        const parsedOptions: RuleOptions = {
+            defaultFormat: defaultFormat,
+            skipOriginChecking: skipOriginChecking,
+            rules: formatRules || [],
+            rawOptions: options
+        };
+
+        // Rule is only enabled without options.
+        if (options.ruleArguments.length === 0) {
+            parsedOptions.defaultFormat = Format.CamelCase;
+        }
+
+        return parsedOptions;
+    }
+
     public applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-        return this.applyWithWalker(new ClassMembersWalker(sourceFile, this.getOptions(), program));
+        const parsedOptions = this.parseOptions(this.getOptions());
+        return this.applyWithWalker(new ClassMembersWalker(sourceFile, parsedOptions, program));
     }
 }
 
@@ -183,30 +213,29 @@ type Dictionary<TValue = any> = { [key: string]: TValue };
 
 // The walker takes care of all the work.
 class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
-    //#region Helping functions
-    private get ruleOptions(): Option[] {
-        return this.getOptions()[0] || [];
+    constructor(sourceFile: ts.SourceFile, private ruleOptions: RuleOptions, program: ts.Program) {
+        super(sourceFile, ruleOptions.rawOptions, program);
     }
 
-    private getRuleOption(option: Partial<Option> & Dictionary): Option | undefined {
-        const options: Array<Option & Dictionary> = this.ruleOptions;
+    //#region Helping functions
+    private getFormatRule(rule: Partial<FormatRule> & Dictionary): FormatRule | undefined {
+        const rules: Array<FormatRule & Dictionary> = this.ruleOptions.rules;
 
-        const index = options.findIndex(x => {
-            for (const key in option) {
-                if ((option.hasOwnProperty(key) && option[key] === x[key]) || option[key] == null) {
+        const index = rules.findIndex(x => {
+            for (const key in rule) {
+                if ((rule.hasOwnProperty(key) && rule[key] === x[key]) || rule[key] == null) {
                     return true;
                 }
             }
             return false;
         });
 
-        return options[index];
+        return rules[index];
     }
 
-    private checkNameNode(option: Option, nameNode: ts.Node): void {
-        const format = option.format || Format.None;
+    private checkNameNode(nameNode: ts.Node, format: Format, leadingUnderscore?: boolean): void {
         const name = nameNode.getText();
-        const casedName = FormatHelpers.changeFormat(format, name, option.leadingUnderscore);
+        const casedName = FormatHelpers.changeFormat(format, name, leadingUnderscore);
 
         if (casedName !== name) {
             // create a fixer for this failure
@@ -243,30 +272,31 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     private checkMethod(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
-        const searchOption: Partial<Option> = {
+        const searchOption: Partial<FormatRule> = {
             kind: kind,
-            modifier: Helpers.resolveAccessModifierFromModifiers(node.modifiers),
-            isStatic: Helpers.modifierKindExistsInModifiers(node.modifiers, ts.SyntaxKind.StaticKeyword)
+            modifier: TsHelpers.resolveAccessModifierFromModifiers(node.modifiers),
+            isStatic: TsHelpers.modifierKindExistsInModifiers(node.modifiers, ts.SyntaxKind.StaticKeyword)
         };
 
-        const option = this.getRuleOption(searchOption);
-        if (option == null) {
+        const option = this.getFormatRule(searchOption);
+        if (option == null && this.ruleOptions.defaultFormat == null) {
             return;
         }
 
-        if (node.parent == null) {
-            return;
-        }
+        const format = option != null ? option.format : this.ruleOptions.defaultFormat;
+        const leadingUnderscore = option != null ? option.leadingUnderscore : false;
 
         // Check if name is existing from heritage.
         if (
-            !Helpers.checkMemberNameInHeritageDeclarations(
-                this.getProgram().getTypeChecker(),
-                node.parent as Helpers.DeclarationWithHeritageClauses,
-                name.getText()
-            )
+            (node.parent != null &&
+                !TsHelpers.checkMemberNameInHeritageDeclarations(
+                    this.getProgram().getTypeChecker(),
+                    node.parent as TsHelpers.DeclarationWithHeritageClauses,
+                    name.getText()
+                )) ||
+            this.ruleOptions.skipOriginChecking
         ) {
-            this.checkNameNode(option, name);
+            this.checkNameNode(name, format || Format.None, leadingUnderscore);
         }
     }
 }
