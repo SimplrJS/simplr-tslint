@@ -1,0 +1,4 @@
+export type Foo<Value> = [string, Value];
+                ~~~~~              [TODO: Add failure string _____]
+
+export type Bar<TValue> = [string, TValue];
