@@ -1,9 +1,9 @@
 export const fooBar = "Hello World!";
-             ~~~~~~                    [TODO: Add failure string _____]
+             ~~~~~~                    [Const variables in source file or in module declaration must have constant-case.]
 
 export namespace FooNamespace {
     export const PackageVersion: string = "v1.0.0";
-                 ~~~~~~~~~~~~~~               [TODO: Add failure string _____]
+                 ~~~~~~~~~~~~~~                      [Const variables in source file or in module declaration must have constant-case.]
 
     export function test(): void {
         const variableInFunctionScope: string = "Hello.";
