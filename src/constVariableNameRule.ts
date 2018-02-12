@@ -3,7 +3,7 @@ import * as Lint from "tslint";
 import * as changeCase from "change-case";
 
 export class Rule extends Lint.Rules.AbstractRule {
-    public static readonly failureString: string = "TODO: Add failure string _____";
+    public static readonly failureString: string = "Const variables in source file or in module declaration must have constant-case.";
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithWalker(new ConstVariableWalker(sourceFile, this.getOptions()));

@@ -13,7 +13,7 @@ function hasPrefix(name: string): boolean {
 }
 
 export class Rule extends Lint.Rules.AbstractRule {
-    public static readonly failureString: string = "TODO: Add failure string _____";
+    public static readonly failureString: string = `Type parameter's name must start with "${PREFIX}" prefix.`;
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithFunction(sourceFile, walk);
