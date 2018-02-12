@@ -184,7 +184,7 @@ export class Rule extends Lint.Rules.TypedRule {
     }
 
     private parseOptions(options: Lint.IOptions): RuleOptions {
-        const defaultFormat: Format = options.ruleArguments.find(x => Format[x] != null);
+        const defaultFormat: Format = options.ruleArguments.find(x => Object.values(Format).find(y => y === x) != null);
         const skipOriginChecking: boolean = options.ruleArguments.findIndex(x => x === SKIP_ORIGIN_CHECKING) !== -1;
         const formatRules: FormatRule[] | undefined = options.ruleArguments.find(x => Array.isArray(x));
 
@@ -196,7 +196,7 @@ export class Rule extends Lint.Rules.TypedRule {
         };
 
         // Rule is only enabled without options.
-        if (options.ruleArguments.length === 0) {
+        if (options.ruleArguments.length === 0 && parsedOptions.defaultFormat == null) {
             parsedOptions.defaultFormat = Format.CamelCase;
         }
 
