@@ -28,7 +28,7 @@
         "node_modules",
         "rules",
         "@types",
-        "tests",
+        "test",
         "examples",
         "tools"
     ]

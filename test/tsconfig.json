@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "removeComments": false,
+        "inlineSourceMap": true,
+        "skipDefaultLibCheck": true,
+        "pretty": true,
+        "noEmit": true,
+        "experimentalDecorators": false,
+        "baseUrl": "./",
+        "typeRoots": [
+            "../"
+        ],
+        "types": [
+            "typescript",
+            "node"
+        ],
+        "lib": [
+            "es6",
+            "dom"
+        ]
+    }
+}
