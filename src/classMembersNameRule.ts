@@ -247,26 +247,32 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
 
     public visitMethodSignature(node: ts.MethodSignature): void {
         this.checkMethod(node, node.name, MemberKind.Method);
+        super.visitMethodSignature(node);
     }
 
     public visitMethodDeclaration(node: ts.MethodDeclaration): void {
         this.checkMethod(node, node.name, MemberKind.Method);
+        super.visitMethodDeclaration(node);
     }
 
     public visitPropertySignature(node: ts.PropertySignature): void {
         this.checkMethod(node, node.name, MemberKind.Property);
+        super.visitPropertySignature(node);
     }
 
     public visitPropertyDeclaration(node: ts.PropertyDeclaration): void {
         this.checkMethod(node, node.name, MemberKind.Property);
+        super.visitPropertyDeclaration(node);
     }
 
     public visitGetAccessor(node: ts.GetAccessorDeclaration): void {
         this.checkMethod(node, node.name, MemberKind.Getter);
+        super.visitGetAccessor(node);
     }
 
     public visitSetAccessor(node: ts.SetAccessorDeclaration): void {
         this.checkMethod(node, node.name, MemberKind.Setter);
+        super.visitSetAccessor(node);
     }
 
     private checkMethod(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
