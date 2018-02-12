@@ -13,7 +13,7 @@ function hasPrefix(name: string): boolean {
 }
 
 export class Rule extends Lint.Rules.AbstractRule {
-    public static readonly failureString: string = `Type parameter's name must start with "${PREFIX}" prefix.`;
+    public static readonly failureMessage: string = `Type parameter's name must start with "${PREFIX}" prefix.`;
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithFunction(sourceFile, walk);
@@ -29,7 +29,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
                 const casedName = PREFIX + changeCase.pascalCase(name);
                 const fix = new Lint.Replacement(node.getStart(), node.getWidth(), casedName);
 
-                ctx.addFailureAtNode(node, Rule.failureString, fix);
+                ctx.addFailureAtNode(node, Rule.failureMessage, fix);
             }
         }
 

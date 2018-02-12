@@ -4,7 +4,7 @@ import * as changeCase from "change-case";
 
 export class Rule extends Lint.Rules.AbstractRule {
     // tslint:disable-next-line:max-line-length
-    public static readonly failureString: string = "Const variables in source file or in module declaration must have (constant-case) format";
+    public static readonly failureMessage: string = "Const variables in source file or in module declaration must have (constant-case) format.";
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
         return this.applyWithWalker(new ConstVariableWalker(sourceFile, this.getOptions()));
@@ -33,7 +33,7 @@ class ConstVariableWalker extends Lint.RuleWalker {
                 const nodeNameEnd = variableDeclaration.name.getWidth();
 
                 const fix = new Lint.Replacement(nodeNameStart, nodeNameEnd, casedName);
-                this.addFailure(this.createFailure(nodeNameStart, nodeNameEnd, Rule.failureString, fix));
+                this.addFailure(this.createFailure(nodeNameStart, nodeNameEnd, Rule.failureMessage, fix));
             }
         }
     }

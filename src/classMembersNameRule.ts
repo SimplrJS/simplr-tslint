@@ -177,7 +177,7 @@ namespace TsHelpers {
 }
 
 export class Rule extends Lint.Rules.TypedRule {
-    public static failureStringFactory(name: string, neededCase: string): string {
+    public static failureMessageFactory(name: string, neededCase: string): string {
         return `Declaration "${name}" format is not correct (${neededCase}).`;
     }
 
@@ -240,7 +240,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
             const fix = new Lint.Replacement(nameNode.getStart(), nameNode.getWidth(), casedName);
 
             // create a failure at the current position
-            this.addFailure(this.createFailure(nameNode.getStart(), nameNode.getWidth(), Rule.failureStringFactory(name, format), fix));
+            this.addFailure(this.createFailure(nameNode.getStart(), nameNode.getWidth(), Rule.failureMessageFactory(name, format), fix));
         }
     }
     //#endregion
