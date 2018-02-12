@@ -1,0 +1,15 @@
+export abstract class Foo {
+    public abstract bar(): void;
+                    ~~~           [Declaration "bar" format is not correct (pascal-case).]
+}
+
+export class Bar extends Foo {
+    public bar(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    public bar2(): void {
+           ~~~~            [Declaration "bar2" format is not correct (pascal-case).]
+        throw new Error("Method not implemented.");
+    }
+}
