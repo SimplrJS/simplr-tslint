@@ -196,7 +196,7 @@ export class Rule extends Lint.Rules.TypedRule {
         };
 
         // Rule is only enabled without options.
-        if (options.ruleArguments.length === 0 && parsedOptions.defaultFormat == null) {
+        if (options.ruleArguments.length === 0) {
             parsedOptions.defaultFormat = Format.CamelCase;
         }
 
