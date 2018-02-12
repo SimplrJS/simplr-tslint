@@ -10,9 +10,10 @@
         "prepublishOnly": "npm run build"
     },
     "files": [
-        "tslint.json",
-        "README.MD",
-        "LICENSE"
+        "rules",
+        "**/*.md",
+        "@types",
+        "tslint.json"
     ],
     "author": "SimplrJS <simplr@quatrodev.com> (https://github.com/SimplrJS)",
     "contributors": [
