@@ -6,7 +6,8 @@
     "scripts": {
         "build": "tsc -p .",
         "watch": "tsc -p . -w",
-        "test": "tslint --test test/rules/*/*"
+        "test": "tslint --test test/rules/*/*",
+        "prepublishOnly": "npm run build"
     },
     "files": [
         "tslint.json",
