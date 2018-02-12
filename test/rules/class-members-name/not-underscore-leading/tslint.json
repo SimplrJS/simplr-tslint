@@ -1,14 +1,6 @@
 {
     "rulesDirectory": "../../../../rules",
     "rules": {
-        "class-members-name": [
-            true,
-            [
-                {
-                    "kind": "method",
-                    "format": "camel-case"
-                }
-            ]
-        ]
+        "class-members-name": [true, [{ "kind": "method", "format": "camel-case" }]]
     }
 }
