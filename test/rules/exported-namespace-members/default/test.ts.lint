@@ -1,0 +1,6 @@
+export namespace Foo {
+    export const version: string = "v1.0.0";
+
+    function internalFunction(): void {}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  [All module members must be exported.]
+}
