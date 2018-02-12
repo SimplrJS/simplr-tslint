@@ -6,11 +6,11 @@ export class Rule extends Lint.Rules.AbstractRule {
     public static readonly failureString: string = "TODO: Add failure string _____";
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-        return this.applyWithWalker(new NoImportsWalker(sourceFile, this.getOptions()));
+        return this.applyWithWalker(new ConstVariableWalker(sourceFile, this.getOptions()));
     }
 }
 
-class NoImportsWalker extends Lint.RuleWalker {
+class ConstVariableWalker extends Lint.RuleWalker {
     private isNodeInModuleDeclaration(node: ts.Node): boolean {
         return ts.isModuleBlock(node) && node.parent != null && ts.isModuleDeclaration(node.parent);
     }
