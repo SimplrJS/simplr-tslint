@@ -10,8 +10,8 @@ import { consoleTestResultHandler, runTest } from "tslint/lib/test";
 process.stdout.write("\nTesting Lint Rules:\n");
 
 const rulesDirectory = path.resolve(process.cwd(), "../rules");
-const testDirectories = glob.sync("./rules/**/tslint.json").map(path.dirname);
-// const testDirectories = ["./rules/class-members-name/everything-is-pascal-case"];
+// const testDirectories = glob.sync("./rules/**/tslint.json").map(path.dirname);
+const testDirectories = ["./rules/const-variable-name/default"];
 
 for (const testDirectory of testDirectories) {
     const results = runTest(testDirectory, rulesDirectory);

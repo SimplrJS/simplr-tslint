@@ -1,0 +1,11 @@
+export const fooBar = "Hello World!";
+             ~~~~~~                    [TODO: Add failure string _____]
+
+export namespace FooNamespace {
+    export const PackageVersion: string = "v1.0.0";
+                 ~~~~~~~~~~~~~~               [TODO: Add failure string _____]
+
+    export function test(): void {
+        const variableInFunctionScope: string = "Hello.";
+    }
+}
