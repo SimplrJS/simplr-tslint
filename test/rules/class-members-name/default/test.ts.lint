@@ -1,0 +1,15 @@
+export abstract class Foo {
+    // tslint:disable-next-line:class-members-name
+    public abstract Bar(): void;
+}
+
+export class Bar extends Foo {
+    public Bar(): void {
+        throw new Error("Method not implemented.");
+    }
+
+    public Bar2(): void {
+           ~~~~            [Declaration "Bar2" format is not correct (camel-case).]
+        throw new Error("Method not implemented.");
+    }
+}

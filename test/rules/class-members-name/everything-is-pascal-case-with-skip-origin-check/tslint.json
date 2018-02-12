@@ -1,0 +1,6 @@
+{
+    "rulesDirectory": "../../../../rules",
+    "rules": {
+        "class-members-name": [true, "pascal-case", "skip-origin-checking"]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "removeComments": false,
+        "outDir": "rules",
+        "rootDir": "src",
+        "noUnusedLocals": true,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "skipDefaultLibCheck": true,
+        "declaration": true,
+        "pretty": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "es6",
+            "es2017.object"
+        ],
+        "types": [
+            "node"
+        ],
+        "typeRoots": [
+            "./node_modules/@types"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "rules",
+        "@types",
+        "test",
+        "examples",
+        "tools"
+    ]
+}

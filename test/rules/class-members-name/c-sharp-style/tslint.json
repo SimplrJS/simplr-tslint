@@ -1,0 +1,22 @@
+{
+    "rulesDirectory": "../../../../rules",
+    "rules": {
+        "class-members-name": [
+            true,
+            [
+                { "kind": "method", "modifier": "public", "format": "pascal-case" },
+                { "kind": "method", "modifier": "protected", "format": "pascal-case" },
+                { "kind": "method", "modifier": "private", "format": "camel-case" },
+                { "kind": "property", "modifier": "public", "format": "pascal-case" },
+                { "kind": "property", "modifier": "protected", "format": "pascal-case" },
+                { "kind": "property", "modifier": "private", "format": "camel-case" },
+                { "kind": "getter", "modifier": "public", "format": "pascal-case" },
+                { "kind": "getter", "modifier": "protected", "format": "pascal-case" },
+                { "kind": "getter", "modifier": "private", "format": "camel-case" },
+                { "kind": "setter", "modifier": "public", "format": "pascal-case" },
+                { "kind": "setter", "modifier": "protected", "format": "pascal-case" },
+                { "kind": "setter", "modifier": "private", "format": "camel-case" }
+            ]
+        ]
+    }
+}

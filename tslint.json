@@ -1,30 +1,17 @@
 {
+    "rulesDirectory": ["rules"],
     "rules": {
-        "align": [
-            true,
-            "parameters",
-            "statements"
-        ],
+        "class-members-name": true,
+        "align": [true, "parameters", "statements"],
         "class-name": true,
-        "comment-format": [
-            false
-        ],
+        "comment-format": [false],
         "curly": true,
         "eofline": true,
         "forin": true,
-        "indent": [
-            true,
-            "spaces"
-        ],
-        "interface-name": [
-            true,
-            "never-prefix"
-        ],
+        "indent": [true, "spaces"],
+        "interface-name": [true, "never-prefix"],
         "jsdoc-format": true,
-        "max-line-length": [
-            true,
-            140
-        ],
+        "max-line-length": [true, 140],
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
@@ -35,14 +22,8 @@
                 "destructuring": "all"
             }
         ],
-        "semicolon": [
-            true,
-            "always"
-        ],
-        "prefer-template": [
-            true,
-            "allow-single-concat"
-        ],
+        "semicolon": [true, "always"],
+        "prefer-template": [true, "allow-single-concat"],
         "no-invalid-this": true,
         "no-eval": true,
         "no-internal-module": true,
@@ -70,61 +51,21 @@
         "await-promise": true,
         "promise-function-async": true,
         "label-position": true,
-        "array-type": [
-            true,
-            "array-simple"
-        ],
-        "arrow-return-shorthand": [
-            true,
-            "multiline"
-        ],
-        "only-arrow-functions": [
-            true,
-            "allow-declarations",
-            "allow-named-functions"
-        ],
-        "one-line": [
-            true,
-            "check-catch",
-            "check-finally",
-            "check-else",
-            "check-open-brace",
-            "check-whitespace"
-        ],
-        "member-access": [
-            true,
-            "check-accessor"
-        ],
-        "arrow-parens": [
-            true,
-            "ban-single-arg-parens"
-        ],
-        "no-consecutive-blank-lines": [
-            true,
-            1
-        ],
-        "quotemark": [
-            true,
-            "double",
-            "jsx-double"
-        ],
-        "no-console": [
-            true,
-            "log"
-        ],
+        "array-type": [true, "array-simple"],
+        "arrow-return-shorthand": [true, "multiline"],
+        "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
+        "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace", "check-whitespace"],
+        "member-access": [true, "check-accessor"],
+        "arrow-parens": [true, "ban-single-arg-parens"],
+        "no-consecutive-blank-lines": [true, 1],
+        "quotemark": [true, "double", "jsx-double"],
+        "no-console": [true, "log"],
         "no-empty": true,
         "no-reference": true,
         "no-shadowed-variable": true,
-        "no-unused-expression": [
-            true,
-            "allow-new"
-        ],
+        "no-unused-expression": [true, "allow-new"],
         "encoding": true,
-        "typedef": [
-            true,
-            "call-signature",
-            "member-variable-declaration"
-        ],
+        "typedef": [true, "call-signature", "member-variable-declaration"],
         "typedef-whitespace": [
             true,
             {
@@ -135,16 +76,8 @@
                 "variable-declaration": "nospace"
             }
         ],
-        "triple-equals": [
-            true,
-            "allow-null-check"
-        ],
-        "variable-name": [
-            true,
-            "ban-keywords",
-            "check-format",
-            "allow-pascal-case"
-        ],
+        "triple-equals": [true, "allow-null-check"],
+        "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
         "whitespace": [
             true,
             "check-branch",

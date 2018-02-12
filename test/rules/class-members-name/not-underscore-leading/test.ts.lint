@@ -1,0 +1,4 @@
+export abstract class Foo {
+    private abstract __Bar(): void;
+                     ~~~~~           [Declaration "__Bar" format is not correct (camel-case).]
+}
