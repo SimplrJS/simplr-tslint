@@ -13,11 +13,9 @@ enum Format {
 }
 
 enum AccessModifier {
-    Any = "any",
     Public = "public",
     Private = "private",
-    Protected = "protected",
-    Static = "static"
+    Protected = "protected"
 }
 
 enum MemberKind {
@@ -116,7 +114,7 @@ namespace TsHelpers {
             });
         }
 
-        return accessModifier;
+        return accessModifier || AccessModifier.Public;
     }
 
     export type DeclarationWithHeritageClauses = ts.Declaration & { heritageClauses?: ts.NodeArray<ts.HeritageClause> };
@@ -288,13 +286,13 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
 
         // Check if name is existing from heritage.
         if (
+            this.ruleOptions.skipOriginChecking ||
             (node.parent != null &&
                 !TsHelpers.checkMemberNameInHeritageDeclarations(
                     this.getProgram().getTypeChecker(),
                     node.parent as TsHelpers.DeclarationWithHeritageClauses,
                     name.getText()
-                )) ||
-            this.ruleOptions.skipOriginChecking
+                ))
         ) {
             this.checkNameNode(name, format || Format.None, leadingUnderscore);
         }
