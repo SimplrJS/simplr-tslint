@@ -28,7 +28,7 @@ enum MemberKind {
 interface FormatRule {
     kind: MemberKind;
     /**
-     * @default "any"
+     * @default "public"
      */
     modifier?: AccessModifier;
     /**
