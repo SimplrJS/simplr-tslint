@@ -1,0 +1,9 @@
+export const FOO_BAR = "Hello World!";
+
+export namespace FooNamespace {
+    export const PACKAGE_VERSION: string = "v1.0.0";
+
+    export function test(): void {
+        const variableInFunctionScope: string = "Hello.";
+    }
+}

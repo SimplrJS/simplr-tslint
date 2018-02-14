@@ -1,0 +1,4 @@
+export type Foo<Value> = [string, Value];
+                ~~~~~                      [Type parameter's name must start with "T" prefix.]
+
+export type Bar<TValue> = [string, TValue];
