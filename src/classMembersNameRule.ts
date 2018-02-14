@@ -220,7 +220,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         return rules[index];
     }
 
-    private checkNameNode(nameNode: ts.Node, format: Format, prefix?: string): void {
+    private checkNameNode(nameNode: ts.Node, format: Format = Format.None, prefix?: string): void {
         const name = nameNode.getText();
         const casedName = FormatHelpers.changeFormat(format, name, prefix);
 
@@ -289,7 +289,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
                     name.getText()
                 ))
         ) {
-            this.checkNameNode(name, format || Format.None, prefix);
+            this.checkNameNode(name, format, prefix);
         }
     }
 }
