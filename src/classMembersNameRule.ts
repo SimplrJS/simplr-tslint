@@ -19,8 +19,6 @@ enum AccessModifier {
 }
 
 enum MemberKind {
-    Getter = "getter",
-    Setter = "setter",
     Method = "method",
     Property = "property"
 }
@@ -36,7 +34,7 @@ interface FormatRule {
      */
     format?: Format;
     isStatic?: boolean;
-    leadingUnderscore?: boolean;
+    prefix?: string;
 }
 
 interface RuleOptions {
@@ -47,39 +45,30 @@ interface RuleOptions {
 }
 
 namespace FormatHelpers {
-    export function getLeadingUnderscore(text: string): string {
-        let result: string = "";
-
-        for (let i = 0; i < text.length; i++) {
-            if (text[i] !== "_") {
-                break;
-            }
-
-            result += text[i];
+    export function changeFormat(format: Format, text: string, prefix: string = ""): string {
+        let textWithoutPrefix: string;
+        if (prefix && text.startsWith(prefix)) {
+            textWithoutPrefix = text.substring(prefix.length, text.length);
+        } else {
+            textWithoutPrefix = text;
         }
-
-        return result;
-    }
-
-    export function changeFormat(format: Format, text: string, leadingUnderscore?: boolean): string {
-        const leadingUnderscoreText: string = leadingUnderscore ? getLeadingUnderscore(text) : "";
 
         switch (format) {
             case Format.None:
                 return text;
             case Format.CamelCase:
-                return leadingUnderscoreText + changeCase.camelCase(text);
+                return prefix + changeCase.camelCase(textWithoutPrefix);
             case Format.PascalCase:
-                return leadingUnderscoreText + changeCase.pascalCase(text);
+                return prefix + changeCase.pascalCase(textWithoutPrefix);
             case Format.ConstantCase:
-                return leadingUnderscoreText + changeCase.constantCase(text);
+                return prefix + changeCase.constantCase(textWithoutPrefix);
             case Format.SnakeCase:
-                return leadingUnderscoreText + changeCase.snakeCase(text);
+                return prefix + changeCase.snakeCase(textWithoutPrefix);
         }
     }
 
-    export function isCorrectFormat(format: Format, text: string, leadingUnderscore?: boolean): boolean {
-        return changeFormat(format, text, leadingUnderscore) === text;
+    export function isCorrectFormat(format: Format, text: string, prefix?: string): boolean {
+        return changeFormat(format, text, prefix) === text;
     }
 }
 
@@ -231,9 +220,9 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         return rules[index];
     }
 
-    private checkNameNode(nameNode: ts.Node, format: Format, leadingUnderscore?: boolean): void {
+    private checkNameNode(nameNode: ts.Node, format: Format = Format.None, prefix?: string): void {
         const name = nameNode.getText();
-        const casedName = FormatHelpers.changeFormat(format, name, leadingUnderscore);
+        const casedName = FormatHelpers.changeFormat(format, name, prefix);
 
         if (casedName !== name) {
             // create a fixer for this failure
@@ -266,12 +255,12 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     public visitGetAccessor(node: ts.GetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Getter);
+        this.checkMethod(node, node.name, MemberKind.Property);
         super.visitGetAccessor(node);
     }
 
     public visitSetAccessor(node: ts.SetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Setter);
+        this.checkMethod(node, node.name, MemberKind.Property);
         super.visitSetAccessor(node);
     }
 
@@ -287,8 +276,8 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
             return;
         }
 
-        const format = option != null ? option.format : this.ruleOptions.defaultFormat;
-        const leadingUnderscore = option != null ? option.leadingUnderscore : false;
+        const format: Format | undefined = option != null ? option.format : this.ruleOptions.defaultFormat;
+        const prefix: string | undefined = option != null ? option.prefix : undefined;
 
         // Check if name is existing from heritage.
         if (
@@ -300,7 +289,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
                     name.getText()
                 ))
         ) {
-            this.checkNameNode(name, format || Format.None, leadingUnderscore);
+            this.checkNameNode(name, format, prefix);
         }
     }
 }
