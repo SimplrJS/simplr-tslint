@@ -45,16 +45,12 @@ interface RuleOptions {
 }
 
 namespace FormatHelpers {
-    export function changeFormat(format: Format, text: string, prefix?: string): string {
+    export function changeFormat(format: Format, text: string, prefix: string = ""): string {
         let textWithoutPrefix: string;
-        if (prefix != null && text.startsWith(prefix)) {
+        if (prefix && text.startsWith(prefix)) {
             textWithoutPrefix = text.substring(prefix.length, text.length);
         } else {
             textWithoutPrefix = text;
-        }
-
-        if (prefix == null) {
-            prefix = "";
         }
 
         switch (format) {
