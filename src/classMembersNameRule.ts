@@ -36,7 +36,7 @@ interface FormatRule {
      */
     format?: Format;
     isStatic?: boolean;
-    leadingUnderscore?: boolean;
+    prefix?: string;
 }
 
 interface RuleOptions {
@@ -61,25 +61,34 @@ namespace FormatHelpers {
         return result;
     }
 
-    export function changeFormat(format: Format, text: string, leadingUnderscore?: boolean): string {
-        const leadingUnderscoreText: string = leadingUnderscore ? getLeadingUnderscore(text) : "";
+    export function changeFormat(format: Format, text: string, prefix?: string): string {
+        let textWithoutPrefix: string;
+        if (prefix != null && text.startsWith(prefix)) {
+            textWithoutPrefix = text.substring(prefix.length, text.length);
+        } else {
+            textWithoutPrefix = text;
+        }
+
+        if (prefix == null) {
+            prefix = "";
+        }
 
         switch (format) {
             case Format.None:
                 return text;
             case Format.CamelCase:
-                return leadingUnderscoreText + changeCase.camelCase(text);
+                return prefix + changeCase.camelCase(textWithoutPrefix);
             case Format.PascalCase:
-                return leadingUnderscoreText + changeCase.pascalCase(text);
+                return prefix + changeCase.pascalCase(textWithoutPrefix);
             case Format.ConstantCase:
-                return leadingUnderscoreText + changeCase.constantCase(text);
+                return prefix + changeCase.constantCase(textWithoutPrefix);
             case Format.SnakeCase:
-                return leadingUnderscoreText + changeCase.snakeCase(text);
+                return prefix + changeCase.snakeCase(textWithoutPrefix);
         }
     }
 
-    export function isCorrectFormat(format: Format, text: string, leadingUnderscore?: boolean): boolean {
-        return changeFormat(format, text, leadingUnderscore) === text;
+    export function isCorrectFormat(format: Format, text: string, prefix?: string): boolean {
+        return changeFormat(format, text, prefix) === text;
     }
 }
 
@@ -231,9 +240,9 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         return rules[index];
     }
 
-    private checkNameNode(nameNode: ts.Node, format: Format, leadingUnderscore?: boolean): void {
+    private checkNameNode(nameNode: ts.Node, format: Format, prefix?: string): void {
         const name = nameNode.getText();
-        const casedName = FormatHelpers.changeFormat(format, name, leadingUnderscore);
+        const casedName = FormatHelpers.changeFormat(format, name, prefix);
 
         if (casedName !== name) {
             // create a fixer for this failure
@@ -287,8 +296,8 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
             return;
         }
 
-        const format = option != null ? option.format : this.ruleOptions.defaultFormat;
-        const leadingUnderscore = option != null ? option.leadingUnderscore : false;
+        const format: Format | undefined = option != null ? option.format : this.ruleOptions.defaultFormat;
+        const prefix: string | undefined = option != null ? option.prefix : undefined;
 
         // Check if name is existing from heritage.
         if (
@@ -300,7 +309,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
                     name.getText()
                 ))
         ) {
-            this.checkNameNode(name, format || Format.None, leadingUnderscore);
+            this.checkNameNode(name, format || Format.None, prefix);
         }
     }
 }
