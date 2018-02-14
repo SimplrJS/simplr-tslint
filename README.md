@@ -30,7 +30,7 @@ Or:
 
 ### `class-members-name`
 
-**Has Fixer**
+**🔨Has Fixer**
 
 Enforces consistent naming style in interface and class declarations.
 
@@ -98,8 +98,7 @@ Private with leading underscore and Protected with leading two underscores.
 
 ### `const-variable-name`
 
-**Has Fixer**
-
+**🔨Has Fixer**
 
 Const variables in source file or in module must have constant-case.
 
@@ -128,7 +127,7 @@ export namespace FooNamespace {
 
 ### `exported-namespace-member`
 
-**Has Fixer**
+**🔨Has Fixer**
 
 All module members must be exported.
 
@@ -140,7 +139,7 @@ All module members must be exported.
 
 ### `type-parameter-name`
 
-**Has Fixer**
+**🔨Has Fixer**
 
 Type parameter's name must start with "T" prefix.
 
