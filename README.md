@@ -38,7 +38,7 @@ Enforces consistent naming style in interface and class declarations.
 
 | Name     | Type                                                               | Optional | Default  |
 | -------- | ------------------------------------------------------------------ | -------- | -------- |
-| kind     | "getter", "setter", "method", "property"                           | Required |          |
+| kind     | "method", "property"                                               | Required |          |
 | modifier | "public", "private", "protected"                                   | Optional | "public" |
 | format   | "none", "camel-case", "pascal-case", "constant-case", "snake-case" | Optional | "none"   |
 | isStatic | boolean                                                            | Optional | false    |
