@@ -1,6 +1,6 @@
 {
     "name": "simplr-tslint",
-    "version": "0.0.1",
+    "version": "1.0.0-alpha",
     "description": "A set of TSLint rules used in SimplrJS projects.",
     "main": "tslint.json",
     "scripts": {
@@ -10,10 +10,10 @@
         "prepublishOnly": "npm run build"
     },
     "files": [
-        "rules",
+        "/rules",
         "**/*.md",
         "@types",
-        "tslint.json"
+        "!test"
     ],
     "author": "SimplrJS <simplr@quatrodev.com> (https://github.com/SimplrJS)",
     "contributors": [
