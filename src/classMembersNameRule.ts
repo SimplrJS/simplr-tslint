@@ -47,20 +47,6 @@ interface RuleOptions {
 }
 
 namespace FormatHelpers {
-    export function getLeadingUnderscore(text: string): string {
-        let result: string = "";
-
-        for (let i = 0; i < text.length; i++) {
-            if (text[i] !== "_") {
-                break;
-            }
-
-            result += text[i];
-        }
-
-        return result;
-    }
-
     export function changeFormat(format: Format, text: string, prefix?: string): string {
         let textWithoutPrefix: string;
         if (prefix != null && text.startsWith(prefix)) {
