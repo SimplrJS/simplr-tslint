@@ -1,6 +1,6 @@
 {
     "name": "simplr-tslint",
-    "version": "1.0.0-alpha.2",
+    "version": "1.0.0-alpha.4",
     "description": "A set of TSLint rules used in SimplrJS projects.",
     "main": "tslint.json",
     "scripts": {
@@ -47,5 +47,8 @@
         "ts-node": "^4.1.0",
         "tslint": "^5.9.1",
         "typescript": "^2.7.1"
+    },
+    "dependencies": {
+        "change-case": "^3.0.1"
     }
 }
