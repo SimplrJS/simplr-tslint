@@ -19,8 +19,6 @@ enum AccessModifier {
 }
 
 enum MemberKind {
-    Getter = "getter",
-    Setter = "setter",
     Method = "method",
     Property = "property"
 }
@@ -261,12 +259,12 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     public visitGetAccessor(node: ts.GetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Getter);
+        this.checkMethod(node, node.name, MemberKind.Property);
         super.visitGetAccessor(node);
     }
 
     public visitSetAccessor(node: ts.SetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Setter);
+        this.checkMethod(node, node.name, MemberKind.Property);
         super.visitSetAccessor(node);
     }
 

@@ -75,13 +75,7 @@ C# coding style example.
         { "kind": "method", "modifier": "private", "format": "camel-case" },
         { "kind": "property", "modifier": "public", "format": "pascal-case" },
         { "kind": "property", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "property", "modifier": "private", "format": "camel-case" },
-        { "kind": "getter", "modifier": "public", "format": "pascal-case" },
-        { "kind": "getter", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "getter", "modifier": "private", "format": "camel-case" },
-        { "kind": "setter", "modifier": "public", "format": "pascal-case" },
-        { "kind": "setter", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "setter", "modifier": "private", "format": "camel-case" }
+        { "kind": "property", "modifier": "private", "format": "camel-case" }
     ]
 ]
 ```
@@ -97,13 +91,7 @@ Private with leading underscore and Protected with leading two underscores.
         { "kind": "method", "modifier": "private", "format": "camel-case", "prefix": "_" },
         { "kind": "property", "modifier": "public", "format": "camel-case" },
         { "kind": "property", "modifier": "protected", "format": "camel-case", "prefix": "__" },
-        { "kind": "property", "modifier": "private", "format": "camel-case", "prefix": "_" },
-        { "kind": "getter", "modifier": "public", "format": "camel-case" },
-        { "kind": "getter", "modifier": "protected", "format": "camel-case", "prefix": "__" },
-        { "kind": "getter", "modifier": "private", "format": "camel-case", "prefix": "_" },
-        { "kind": "setter", "modifier": "public", "format": "camel-case" },
-        { "kind": "setter", "modifier": "protected", "format": "camel-case", "prefix": "__" },
-        { "kind": "setter", "modifier": "private", "format": "camel-case", "prefix": "_" }
+        { "kind": "property", "modifier": "private", "format": "camel-case", "prefix": "_" }
     ]
 ]
 ```
