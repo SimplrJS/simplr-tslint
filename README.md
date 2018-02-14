@@ -30,17 +30,19 @@ Or:
 
 ### `class-members-name`
 
+**🔨Has Fixer**
+
 Enforces consistent naming style in interface and class declarations.
 
 #### Format rule
 
-| Name              | Type                                                               | Optional | Default  |
-| ----------------- | ------------------------------------------------------------------ | -------- | -------- |
-| kind              | "getter", "setter", "method", "property"                           | Required |          |
-| modifier          | "public", "private", "protected"                                   | Optional | "public" |
-| format            | "none", "camel-case", "pascal-case", "constant-case", "snake-case" | Optional | "none"   |
-| isStatic          | boolean                                                            | Optional | false    |
-| leadingUnderscore | boolean                                                            | Optional | false    |
+| Name     | Type                                                               | Optional | Default  |
+| -------- | ------------------------------------------------------------------ | -------- | -------- |
+| kind     | "method", "property"                                               | Required |          |
+| modifier | "public", "private", "protected"                                   | Optional | "public" |
+| format   | "none", "camel-case", "pascal-case", "constant-case", "snake-case" | Optional | "none"   |
+| isStatic | boolean                                                            | Optional | false    |
+| prefix   | string                                                             | Optional |          |
 
 #### Config examples
 
@@ -73,18 +75,30 @@ C# coding style example.
         { "kind": "method", "modifier": "private", "format": "camel-case" },
         { "kind": "property", "modifier": "public", "format": "pascal-case" },
         { "kind": "property", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "property", "modifier": "private", "format": "camel-case" },
-        { "kind": "getter", "modifier": "public", "format": "pascal-case" },
-        { "kind": "getter", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "getter", "modifier": "private", "format": "camel-case" },
-        { "kind": "setter", "modifier": "public", "format": "pascal-case" },
-        { "kind": "setter", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "setter", "modifier": "private", "format": "camel-case" }
+        { "kind": "property", "modifier": "private", "format": "camel-case" }
+    ]
+]
+```
+
+Private with leading underscore and Protected with leading two underscores.
+
+```json
+"class-members-name": [
+    true,
+    [
+        { "kind": "method", "modifier": "public", "format": "camel-case" },
+        { "kind": "method", "modifier": "protected", "format": "camel-case", "prefix": "__" },
+        { "kind": "method", "modifier": "private", "format": "camel-case", "prefix": "_" },
+        { "kind": "property", "modifier": "public", "format": "camel-case" },
+        { "kind": "property", "modifier": "protected", "format": "camel-case", "prefix": "__" },
+        { "kind": "property", "modifier": "private", "format": "camel-case", "prefix": "_" }
     ]
 ]
 ```
 
 ### `const-variable-name`
+
+**🔨Has Fixer**
 
 Const variables in source file or in module must have constant-case.
 
@@ -94,7 +108,7 @@ Const variables in source file or in module must have constant-case.
 export const FOO_FOO = "Hello World!";
 
 export const fooBar = "Hello World!";
-        //   ~~~~~~                    [Const variables in source file or in module declaration must have (constant-case) format.]
+//   ~~~~~~                    [Const variables in source file or in module declaration must have (constant-case) format.]
 
 export namespace FooNamespace {
     export const PACKAGE_VERSION: string = "v1.0.0";
@@ -103,7 +117,6 @@ export namespace FooNamespace {
         const variableInFunctionScope: string = "Hello.";
     }
 }
-
 ```
 
 #### Config example
@@ -113,6 +126,8 @@ export namespace FooNamespace {
 ```
 
 ### `exported-namespace-member`
+
+**🔨Has Fixer**
 
 All module members must be exported.
 
@@ -124,16 +139,17 @@ All module members must be exported.
 
 ### `type-parameter-name`
 
+**🔨Has Fixer**
+
 Type parameter's name must start with "T" prefix.
 
 #### Example
 
 ```ts
 export type Foo<Value> = [string, Value];
-            //  ~~~~~                      [Type parameter's name must start with "T" prefix.]
+//  ~~~~~                      [Type parameter's name must start with "T" prefix.]
 
 export type Bar<TValue> = [string, TValue];
-
 ```
 
 #### Config example
