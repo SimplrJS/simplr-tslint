@@ -125,6 +125,12 @@ export namespace FooNamespace {
 "const-variable-name": true
 ```
 
+This rule only will be applied to constants that has primitive value (e.g. `string`, `boolean`). 
+
+```json
+"const-variable-name": [true, "only-primitive"]
+```
+
 ### `exported-namespace-member`
 
 **🔨Has Fixer**
