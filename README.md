@@ -31,6 +31,7 @@ Or:
 ### `class-members-name`
 
 **🔨Has Fixer**
+**⚠️Requires Type info**
 
 Enforces consistent naming style in interface and class declarations.
 
@@ -99,6 +100,7 @@ Private with leading underscore and Protected with leading two underscores.
 ### `const-variable-name`
 
 **🔨Has Fixer**
+**⚠️Requires Type info**
 
 Const variables in source file or in module must have constant-case.
 
