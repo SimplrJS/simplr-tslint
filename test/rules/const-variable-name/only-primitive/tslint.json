@@ -1,0 +1,6 @@
+{
+    "rulesDirectory": "../../../../rules",
+    "rules": {
+        "const-variable-name": [true, "only-primitive"]
+    }
+}
