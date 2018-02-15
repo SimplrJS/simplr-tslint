@@ -1,0 +1,4 @@
+class FooClass {}
+
+const Foo = new FooClass();
+const PACKAGE_VERSION: string = "v1.0.0";
