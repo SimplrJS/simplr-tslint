@@ -2,7 +2,7 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as changeCase from "change-case";
 
-export const ONLY_PRIMITIVE: string = "only-primitive";
+export const ONLY_PRIMITIVES: string = "only-primitives";
 
 export class Rule extends Lint.Rules.TypedRule {
     // tslint:disable-next-line:max-line-length
@@ -45,7 +45,7 @@ class ConstVariableWalker extends Lint.ProgramAwareRuleWalker {
         const variableDeclarationList = node.declarationList.declarations;
 
         for (const variableDeclaration of variableDeclarationList) {
-            if (this.hasOption(ONLY_PRIMITIVE)) {
+            if (this.hasOption(ONLY_PRIMITIVES)) {
                 const type = typeChecker.getTypeAtLocation(variableDeclaration);
 
                 if (!this.isTypePrimitive(type)) {

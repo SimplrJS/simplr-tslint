@@ -2,7 +2,7 @@
     "rulesDirectory": ["rules"],
     "rules": {
         "class-members-name": true,
-        "const-variable-name": [true, "only-primitive"],
+        "const-variable-name": [true, "only-primitives"],
         "exported-namespace-members": true,
         "type-parameter-name": true,
         "align": [true, "parameters", "statements"],
