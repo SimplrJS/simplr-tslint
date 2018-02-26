@@ -13,6 +13,8 @@ node_js:
 script:
 - npm run build
 - npm run test
+before_deploy:
+- npm run travis-release
 deploy:
   provider: npm
   email: $SIMPLR_NPM_EMAIL

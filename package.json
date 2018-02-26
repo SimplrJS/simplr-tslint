@@ -7,7 +7,8 @@
         "build": "tsc -p .",
         "watch": "tsc -p . -w",
         "test": "tslint --test test/rules/*/*",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "travis-release": "node ./tools/travis-release/release.js"
     },
     "files": [
         "/rules",
