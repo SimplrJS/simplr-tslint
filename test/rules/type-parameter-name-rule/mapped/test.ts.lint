@@ -1,0 +1,4 @@
+export type ContextTypes<TContext> = {
+    [K in keyof TContext]: PropTypes.Validator<{}>;
+     ~                                               [Type parameter's name must start with "T" prefix.]
+};
