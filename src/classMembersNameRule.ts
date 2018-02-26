@@ -78,10 +78,6 @@ namespace FormatHelpers {
 
         return changeFormat(format, text);
     }
-
-    export function isCorrectFormat(format: Format, text: string, allowedPrefixes: string[] = []): boolean {
-        return changeFormatWithPrefixes(format, text, allowedPrefixes).indexOf(text) !== -1;
-    }
 }
 
 namespace TsHelpers {
