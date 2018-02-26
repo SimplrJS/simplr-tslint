@@ -1,13 +1,5 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { LoggerBuilder, LoggerConfigurationBuilder, LogLevel } from "simplr-logger";
-
-const LoggerConfiguration = new LoggerConfigurationBuilder()
-    .SetDefaultLogLevel(LogLevel.Trace)
-    .Build();
-
-export const Logger = new LoggerBuilder(LoggerConfiguration);
-
 
 interface PackageJson {
     version: string;
@@ -20,8 +12,6 @@ interface PackageJson {
 
 async function Main(): Promise<void> {
     const travisTag = process.env["TRAVIS_TAG"];
-    Logger.Info("---- Travis-Release ----");
-    Logger.Info("TravisTag", travisTag);
 
     if (travisTag == null) {
         return undefined;
