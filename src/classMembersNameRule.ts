@@ -115,7 +115,7 @@ namespace TsHelpers {
             });
         }
 
-        return accessModifier || AccessModifier.Public;
+        return accessModifier;
     }
 
     export type DeclarationWithHeritageClauses = ts.Declaration & { heritageClauses?: ts.NodeArray<ts.HeritageClause> };
@@ -247,39 +247,50 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     //#endregion
 
     public visitMethodSignature(node: ts.MethodSignature): void {
-        this.checkMethod(node, node.name, MemberKind.Method);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Method);
         super.visitMethodSignature(node);
     }
 
     public visitMethodDeclaration(node: ts.MethodDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Method);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Method);
         super.visitMethodDeclaration(node);
     }
 
     public visitPropertySignature(node: ts.PropertySignature): void {
-        this.checkMethod(node, node.name, MemberKind.Property);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Property);
         super.visitPropertySignature(node);
     }
 
     public visitPropertyDeclaration(node: ts.PropertyDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Property);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Property);
         super.visitPropertyDeclaration(node);
     }
 
     public visitGetAccessor(node: ts.GetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Property);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Property);
         super.visitGetAccessor(node);
     }
 
     public visitSetAccessor(node: ts.SetAccessorDeclaration): void {
-        this.checkMethod(node, node.name, MemberKind.Property);
+        this.checkDeclarationNameFormat(node, node.name, MemberKind.Property);
         super.visitSetAccessor(node);
     }
 
-    private checkMethod(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
+    public visitConstructorDeclaration(node: ts.ConstructorDeclaration): void {
+        for (const parameter of node.parameters) {
+            const accessModifier = TsHelpers.resolveAccessModifierFromModifiers(parameter.modifiers);
+            if (accessModifier === AccessModifier.Private) {
+                this.checkDeclarationNameFormat(parameter, parameter.name, MemberKind.Property);
+            }
+        }
+
+        super.visitConstructorDeclaration(node);
+    }
+
+    private checkDeclarationNameFormat(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
         const searchOption: Partial<FormatRule> = {
             kind: kind,
-            modifier: TsHelpers.resolveAccessModifierFromModifiers(node.modifiers),
+            modifier: TsHelpers.resolveAccessModifierFromModifiers(node.modifiers) || AccessModifier.Public,
             isStatic: TsHelpers.modifierKindExistsInModifiers(node.modifiers, ts.SyntaxKind.StaticKeyword)
         };
 
