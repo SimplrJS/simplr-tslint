@@ -1,0 +1,4 @@
+export class Foo {
+    constructor(private PascalCase: string, AnotherPascalCase: string) {}
+                        ~~~~~~~~~~                                         [Declaration "PascalCase" format is not correct (camel-case).]
+}

@@ -41,14 +41,13 @@
         "tslint": "^5.8.0"
     },
     "devDependencies": {
-        "@types/change-case": "^2.3.1",
-        "@types/node": "^9.4.1",
-        "fast-glob": "^2.0.3",
-        "ts-node": "^4.1.0",
+        "@types/node": "^9.4.6",
+        "fast-glob": "^2.1.0",
+        "ts-node": "^5.0.0",
         "tslint": "^5.9.1",
-        "typescript": "^2.7.1"
+        "typescript": "^2.7.2"
     },
     "dependencies": {
-        "change-case": "^3.0.1"
+        "change-case": "^3.0.2"
     }
 }

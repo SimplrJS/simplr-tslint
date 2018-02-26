@@ -1,7 +1,7 @@
 {
     "rulesDirectory": ["rules"],
     "rules": {
-        "class-members-name": true,
+        "class-members-name": [true, [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }]],
         "const-variable-name": [true, "only-primitives"],
         "exported-namespace-members": true,
         "type-parameter-name": true,

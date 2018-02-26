@@ -1,0 +1,6 @@
+{
+    "rulesDirectory": "../../../../rules",
+    "rules": {
+        "class-members-name": [true, [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }]]
+    }
+}
