@@ -4,8 +4,14 @@ A set of [TSLint](https://palantir.github.io/tslint/) rules used in SimplrJS pro
 
 ## Get started
 
-```cmd
+```sh
 npm install simplr-tslint --save-dev
+```
+
+To get latest tslint config.
+
+```sh
+npm install simplr-tslint@next --save-dev
 ```
 
 ## How to use?
