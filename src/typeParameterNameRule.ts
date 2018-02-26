@@ -27,9 +27,9 @@ function walk(ctx: Lint.WalkContext<void>): void {
 
             if (!hasPrefix(name)) {
                 const casedName = PREFIX + changeCase.pascalCase(name);
-                const fix = new Lint.Replacement(node.getStart(), node.getWidth(), casedName);
 
-                ctx.addFailureAtNode(node, Rule.failureMessage, fix);
+                const fix = new Lint.Replacement(node.name.getStart(), node.name.getWidth(), casedName);
+                ctx.addFailureAtNode(node.name, Rule.failureMessage, fix);
             }
         }
 
