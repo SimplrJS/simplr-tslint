@@ -34,7 +34,7 @@ interface FormatRule {
      */
     format?: Format;
     isStatic?: boolean;
-    prefix?: string;
+    allowedPrefixes?: string[];
 }
 
 interface RuleOptions {
@@ -45,30 +45,42 @@ interface RuleOptions {
 }
 
 namespace FormatHelpers {
-    export function changeFormat(format: Format, text: string, prefix: string = ""): string {
-        let textWithoutPrefix: string;
-        if (prefix && text.startsWith(prefix)) {
-            textWithoutPrefix = text.substring(prefix.length, text.length);
-        } else {
-            textWithoutPrefix = text;
-        }
-
+    export function changeFormat(format: Format, text: string): string {
         switch (format) {
             case Format.None:
                 return text;
             case Format.CamelCase:
-                return prefix + changeCase.camelCase(textWithoutPrefix);
+                return changeCase.camelCase(text);
             case Format.PascalCase:
-                return prefix + changeCase.pascalCase(textWithoutPrefix);
+                return changeCase.pascalCase(text);
             case Format.ConstantCase:
-                return prefix + changeCase.constantCase(textWithoutPrefix);
+                return changeCase.constantCase(text);
             case Format.SnakeCase:
-                return prefix + changeCase.snakeCase(textWithoutPrefix);
+                return changeCase.snakeCase(text);
         }
     }
 
-    export function isCorrectFormat(format: Format, text: string, prefix?: string): boolean {
-        return changeFormat(format, text, prefix) === text;
+    export function changeFormatWithPrefixes(format: Format, text: string, allowedPrefixes: string[] = []): string {
+        if (allowedPrefixes.length === 0) {
+            return changeFormat(format, text);
+        }
+
+        for (const allowedPrefix of allowedPrefixes) {
+            // Find prefix from text in allowed prefixes.
+            const prefix: string = text.substring(0, allowedPrefix.length);
+            if (allowedPrefix !== prefix) {
+                continue;
+            }
+            const textWithoutPrefix: string = text.substring(prefix.length, text.length);
+
+            return allowedPrefix + changeFormat(format, textWithoutPrefix);
+        }
+
+        return changeFormat(format, text);
+    }
+
+    export function isCorrectFormat(format: Format, text: string, allowedPrefixes: string[] = []): boolean {
+        return changeFormatWithPrefixes(format, text, allowedPrefixes).indexOf(text) !== -1;
     }
 }
 
@@ -220,9 +232,9 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         return rules[index];
     }
 
-    private checkNameNode(nameNode: ts.Node, format: Format = Format.None, prefix?: string): void {
+    private checkNameNode(nameNode: ts.Node, format: Format = Format.None, allowedPrefixes: string[] = []): void {
         const name = nameNode.getText();
-        const casedName = FormatHelpers.changeFormat(format, name, prefix);
+        const casedName = FormatHelpers.changeFormatWithPrefixes(format, name, allowedPrefixes);
 
         if (casedName !== name) {
             // create a fixer for this failure
@@ -277,7 +289,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
         }
 
         const format: Format | undefined = option != null ? option.format : this.ruleOptions.defaultFormat;
-        const prefix: string | undefined = option != null ? option.prefix : undefined;
+        const allowedPrefixes: string[] | undefined = option != null ? option.allowedPrefixes : undefined;
 
         // Check if name is existing from heritage.
         if (
@@ -289,7 +301,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
                     name.getText()
                 ))
         ) {
-            this.checkNameNode(name, format, prefix);
+            this.checkNameNode(name, format, allowedPrefixes);
         }
     }
 }

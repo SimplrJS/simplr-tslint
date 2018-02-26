@@ -37,13 +37,13 @@ Enforces consistent naming style in interface and class declarations.
 
 #### Format rule
 
-| Name     | Type                                                               | Optional | Default  |
-| -------- | ------------------------------------------------------------------ | -------- | -------- |
-| kind     | "method", "property"                                               | Required |          |
-| modifier | "public", "private", "protected"                                   | Optional | "public" |
-| format   | "none", "camel-case", "pascal-case", "constant-case", "snake-case" | Optional | "none"   |
-| isStatic | boolean                                                            | Optional | false    |
-| prefix   | string                                                             | Optional |          |
+| Name            | Type                                                               | Optional | Default  |
+| --------------- | ------------------------------------------------------------------ | -------- | -------- |
+| kind            | "method", "property"                                               | Required |          |
+| modifier        | "public", "private", "protected"                                   | Optional | "public" |
+| format          | "none", "camel-case", "pascal-case", "constant-case", "snake-case" | Optional | "none"   |
+| isStatic        | boolean                                                            | Optional | false    |
+| allowedPrefixes | string[]                                                           | Optional |          |
 
 #### Config examples
 
@@ -81,22 +81,6 @@ C# coding style example.
 ]
 ```
 
-Private with leading underscore and Protected with leading two underscores.
-
-```json
-"class-members-name": [
-    true,
-    [
-        { "kind": "method", "modifier": "public", "format": "camel-case" },
-        { "kind": "method", "modifier": "protected", "format": "camel-case", "prefix": "__" },
-        { "kind": "method", "modifier": "private", "format": "camel-case", "prefix": "_" },
-        { "kind": "property", "modifier": "public", "format": "camel-case" },
-        { "kind": "property", "modifier": "protected", "format": "camel-case", "prefix": "__" },
-        { "kind": "property", "modifier": "private", "format": "camel-case", "prefix": "_" }
-    ]
-]
-```
-
 ### `const-variable-name`
 
 **🔨Has Fixer**
@@ -127,7 +111,7 @@ export namespace FooNamespace {
 "const-variable-name": true
 ```
 
-This rule only will be applied to constants that has primitive value (e.g. `string`, `boolean`). 
+This rule only will be applied to constants that has primitive value (e.g. `string`, `boolean`).
 
 ```json
 "const-variable-name": [true, "only-primitives"]
