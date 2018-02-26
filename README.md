@@ -94,7 +94,7 @@ Const variables in source file or in module must have constant-case.
 export const FOO_FOO = "Hello World!";
 
 export const fooBar = "Hello World!";
-//   ~~~~~~                    [Const variables in source file or in module declaration must have (constant-case) format.]
+//           ~~~~~~                    [Const variables in source file or in module declaration must have (constant-case) format.]
 
 export namespace FooNamespace {
     export const PACKAGE_VERSION: string = "v1.0.0";
@@ -142,6 +142,34 @@ export type Foo<Value> = [string, Value];
 //  ~~~~~                      [Type parameter's name must start with "T" prefix.]
 
 export type Bar<TValue> = [string, TValue];
+```
+
+#### Config example
+
+```json
+"type-parameter-name": true
+```
+
+### `backing-field`
+
+Backing fields are with `_` prefix properties. They can ONLY be used in GetAccessor and SetAccessor declarations.
+
+#### Example
+
+```ts
+export class Foo {
+    constructor(private _foo: string) {}
+
+    public get foo(): string {
+        return this._foo;
+    }
+
+    public getFoo(): string {
+        return this._foo;
+//             ~~~~~~~~~   [Backing field can only be used in GetAccessor and SetAccessor.]
+    }
+}
+
 ```
 
 #### Config example
