@@ -5,6 +5,7 @@
         "const-variable-name": [true, "only-primitives"],
         "exported-namespace-members": true,
         "type-parameter-name": true,
+        "backing-field": true,
         "align": [true, "parameters", "statements"],
         "class-name": true,
         "comment-format": [false],

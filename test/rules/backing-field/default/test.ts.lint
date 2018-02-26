@@ -1,0 +1,12 @@
+export class Foo {
+    constructor(private _foo: string) {}
+
+    public get foo(): string {
+        return this._foo;
+    }
+
+    public getFoo(): string {
+        return this._foo;
+               ~~~~~~~~~   [Backing field can only be used in GetAccessor and SetAccessor.]
+    }
+}
