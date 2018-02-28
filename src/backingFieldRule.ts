@@ -23,7 +23,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
             if (
                 ts.isPropertyDeclaration(member) &&
                 member.modifiers != null &&
-                member.modifiers.findIndex(x => x.kind === ts.SyntaxKind.PrivateKeyword) &&
+                member.modifiers.findIndex(x => x.kind === ts.SyntaxKind.PrivateKeyword) !== -1 &&
                 member.name.getText() === name
             ) {
                 return true;
