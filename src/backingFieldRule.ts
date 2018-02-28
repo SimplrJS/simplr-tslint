@@ -34,7 +34,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
                 for (const parameter of member.parameters) {
                     if (
                         parameter.modifiers != null &&
-                        parameter.modifiers.findIndex(x => x.kind === ts.SyntaxKind.PrivateKeyword) &&
+                        parameter.modifiers.findIndex(x => x.kind === ts.SyntaxKind.PrivateKeyword) !== -1 &&
                         parameter.name.getText() === name
                     ) {
                         return true;
