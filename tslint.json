@@ -80,7 +80,7 @@
             }
         ],
         "triple-equals": [true, "allow-null-check"],
-        "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
+        "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"],
         "whitespace": [
             true,
             "check-branch",
