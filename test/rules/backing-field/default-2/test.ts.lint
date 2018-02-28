@@ -1,0 +1,17 @@
+const foo = {
+    _hello: ""
+};
+
+foo._hello;
+
+export class Foo {
+    constructor(private __foo: string) {}
+
+    public get foo(): string {
+        return this.__foo;
+    }
+
+    public getFoo(): string {
+        return this.__foo;
+    }
+}

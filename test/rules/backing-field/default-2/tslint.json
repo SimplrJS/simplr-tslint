@@ -1,0 +1,6 @@
+{
+    "rulesDirectory": "../../../../rules",
+    "rules": {
+        "backing-field": true
+    }
+}
