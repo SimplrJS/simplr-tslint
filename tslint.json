@@ -49,7 +49,6 @@
         ],
         "no-angle-bracket-type-assertion": true,
         "no-empty-interface": true,
-        "no-unnecessary-callback-wrapper": true,
         "return-undefined": true,
         "no-sparse-arrays": true,
         "await-promise": true,
