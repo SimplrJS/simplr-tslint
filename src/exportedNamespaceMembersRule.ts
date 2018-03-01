@@ -10,6 +10,13 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class ExportedNamespaceMembersWalker extends Lint.RuleWalker {
+    public visitSourceFile(node: ts.SourceFile): void {
+        // This rule should only work in source files.
+        if (!node.isDeclarationFile) {
+            super.visitSourceFile(node);
+        }
+    }
+
     public visitModuleDeclaration(node: ts.ModuleDeclaration): void {
         super.visitModuleDeclaration(node);
         if (node.body == null || !ts.isModuleBlock(node.body)) {

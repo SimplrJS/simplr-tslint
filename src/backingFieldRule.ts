@@ -46,6 +46,13 @@ class BackingFieldsWalker extends Lint.RuleWalker {
         return false;
     }
 
+    public visitSourceFile(node: ts.SourceFile): void {
+        // This rule should only work in source files.
+        if (!node.isDeclarationFile) {
+            super.visitSourceFile(node);
+        }
+    }
+
     public visitPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
         super.visitPropertyAccessExpression(node);
         const name = node.name.getText();
