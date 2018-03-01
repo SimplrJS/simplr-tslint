@@ -1,6 +1,6 @@
 {
     "name": "simplr-tslint",
-    "version": "1.0.0-alpha.7",
+    "version": "1.0.0-alpha.8",
     "description": "A set of TSLint rules used in SimplrJS projects.",
     "main": "tslint.json",
     "scripts": {
