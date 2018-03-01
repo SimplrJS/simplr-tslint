@@ -183,19 +183,12 @@ export class Rule extends Lint.Rules.TypedRule {
         const skipOriginChecking: boolean = options.ruleArguments.findIndex(x => x === SKIP_ORIGIN_CHECKING) !== -1;
         const formatRules: FormatRule[] | undefined = options.ruleArguments.find(x => Array.isArray(x));
 
-        const parsedOptions: RuleOptions = {
-            defaultFormat: defaultFormat,
+        return {
+            defaultFormat: defaultFormat || Format.CamelCase,
             skipOriginChecking: skipOriginChecking,
             rules: formatRules || [],
             rawOptions: options
         };
-
-        // Rule is only enabled without options.
-        if (options.ruleArguments.length === 0) {
-            parsedOptions.defaultFormat = Format.CamelCase;
-        }
-
-        return parsedOptions;
     }
 
     public applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
