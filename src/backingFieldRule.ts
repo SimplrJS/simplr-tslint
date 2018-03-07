@@ -7,7 +7,7 @@ const BACKING_FIELD_PREFIX = "_";
 export class Rule extends Lint.Rules.AbstractRule {
     public static readonly usageFailureMessage: string = "Backing field can only be used in GetAccessor and SetAccessor.";
     public static accessorFailureMessageFactory(expectedName: string): string {
-        return `Accessor expected name "${expectedName}".`;
+        return `Expected accessor name is "${expectedName}".`;
     }
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -24,7 +24,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
         return name.substring(BACKING_FIELD_PREFIX.length, name.length);
     }
 
-    private checkAccessorName(accessorName: string, backingFieldName: string): boolean {
+    private accessorNameEquals(accessorName: string, backingFieldName: string): boolean {
         return BACKING_FIELD_PREFIX + accessorName === backingFieldName;
     }
 
@@ -79,7 +79,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
                 const accessorNameNode = currentParentNode.name;
                 const casedAccessorName = changeCase.camelCase(accessorNameNode.getText());
 
-                if (!this.checkAccessorName(casedAccessorName, name)) {
+                if (!this.accessorNameEquals(casedAccessorName, name)) {
                     const expectedAccessorName = this.removePrefix(name);
                     const accessorNameNodeStart = accessorNameNode.getStart();
                     const accessorNameNodeWidth = accessorNameNode.getWidth();
