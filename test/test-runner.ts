@@ -11,7 +11,7 @@ process.stdout.write("\nTesting Lint Rules:\n");
 
 const rulesDirectory = path.resolve(process.cwd(), "../rules");
 // const testDirectories = glob.sync("./rules/**/tslint.json").map(path.dirname);
-const testDirectories = ["./rules/const-variable-name/default"];
+const testDirectories = ["./rules/backing-field/default"];
 
 for (const testDirectory of testDirectories) {
     const results = runTest(testDirectory, rulesDirectory);

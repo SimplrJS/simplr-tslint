@@ -1,0 +1,7 @@
+export class Foo {
+    constructor(private _bar: string) {}
+
+    public get bar(): string {
+        return this._bar;
+    }
+}

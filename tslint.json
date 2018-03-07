@@ -26,7 +26,7 @@
                 "destructuring": "all"
             }
         ],
-        "semicolon": [true, "always"],
+        "semicolon": [true, "always", "ignore-bound-class-methods"],
         "prefer-template": [true, "allow-single-concat"],
         "no-invalid-this": true,
         "no-eval": true,
