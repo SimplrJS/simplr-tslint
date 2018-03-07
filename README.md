@@ -158,6 +158,8 @@ export type Bar<TValue> = [string, TValue];
 
 ### `backing-field`
 
+**🔨Has Fixer**
+
 Backing fields are properties with `_` prefix. They can ONLY be used in GetAccessor and SetAccessor declarations.
 
 #### Example
