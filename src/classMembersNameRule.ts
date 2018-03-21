@@ -50,7 +50,7 @@ interface ResolvedRuleOptions {
     skipOriginChecking: boolean;
     defaultFormat?: Format;
     rules: FormatRule[];
-    exclude: string[];
+    ignoreParentSuffixes: string[];
     rawOptions: Lint.IOptions;
 }
 
@@ -197,7 +197,7 @@ export class Rule extends Lint.Rules.TypedRule {
             defaultFormat: defaultFormat || Format.CamelCase,
             skipOriginChecking: skipOriginChecking,
             rules: ruleSettings.formatRules || [],
-            exclude: ruleSettings.ignoreParentSuffixes || [],
+            ignoreParentSuffixes: ruleSettings.ignoreParentSuffixes || [],
             rawOptions: options
         };
     }
@@ -289,11 +289,12 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     private checkDeclarationNameFormat(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
+        debugger;
         // Check if parent does not exist in ignore list.
         const parent = node.parent as TsHelpers.ClassOrInterfaceDeclaration;
         if (parent.name != null) {
             const parentName = parent.name.getText();
-            const excluded = this.ruleOptions.exclude.findIndex(x => parentName.endsWith(x)) !== -1;
+            const excluded = this.ruleOptions.ignoreParentSuffixes.findIndex(x => parentName.endsWith(x)) !== -1;
 
             if (excluded) {
                 return;

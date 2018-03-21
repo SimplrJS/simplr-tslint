@@ -4,7 +4,7 @@
         "class-members-name": [
             true,
             {
-                "allowedPrefixes": ["Dto"]
+                "ignoreParentSuffixes": ["Dto"]
             }
         ]
     }
