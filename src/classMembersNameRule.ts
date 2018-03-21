@@ -289,7 +289,6 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     private checkDeclarationNameFormat(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
-        debugger;
         // Check if parent does not exist in ignore list.
         const parent = node.parent as TsHelpers.ClassOrInterfaceDeclaration;
         if (parent.name != null) {
