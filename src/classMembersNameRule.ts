@@ -26,11 +26,11 @@ enum MemberKind {
 interface FormatRule {
     kind: MemberKind;
     /**
-     * @default "public"
+     * Default "public"
      */
     modifier?: AccessModifier;
     /**
-     * @default "none"
+     * Default "none"
      */
     format?: Format;
     isStatic?: boolean;
