@@ -12,6 +12,7 @@ node_js:
 - "node"
 script:
 - npm run build
+- npm run tslint
 - npm run test
 before_deploy:
 - npm run travis-release
