@@ -38,12 +38,12 @@ interface FormatRule {
 }
 
 function isRuleSettings(obj: Partial<RuleSettings>): obj is RuleSettings {
-    return obj.formatRules != null || obj.ignoreParentSuffix != null;
+    return obj.formatRules != null || obj.ignoreParentSuffixes != null;
 }
 
 interface RuleSettings {
     formatRules?: FormatRule[];
-    ignoreParentSuffix?: string[];
+    ignoreParentSuffixes?: string[];
 }
 
 interface ResolvedRuleOptions {
@@ -197,7 +197,7 @@ export class Rule extends Lint.Rules.TypedRule {
             defaultFormat: defaultFormat || Format.CamelCase,
             skipOriginChecking: skipOriginChecking,
             rules: ruleSettings.formatRules || [],
-            exclude: ruleSettings.ignoreParentSuffix || [],
+            exclude: ruleSettings.ignoreParentSuffixes || [],
             rawOptions: options
         };
     }

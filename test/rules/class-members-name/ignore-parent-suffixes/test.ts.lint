@@ -1,0 +1,11 @@
+interface Foo {
+    _id: string;
+    ~~~           [Declaration "_id" format is not correct (camel-case).]
+    full_name: string;
+    ~~~~~~~~~           [Declaration "full_name" format is not correct (camel-case).]
+}
+
+interface FooDto {
+    _id: string;
+    full_name: string;
+}

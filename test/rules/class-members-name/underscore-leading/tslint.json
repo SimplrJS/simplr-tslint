@@ -1,6 +1,11 @@
 {
     "rulesDirectory": "../../../../rules",
     "rules": {
-        "class-members-name": [true, [{ "kind": "method", "format": "camel-case", "allowedPrefixes": ["__"] }]]
+        "class-members-name": [
+            true,
+            {
+                "formatRules": [{ "kind": "method", "format": "camel-case", "allowedPrefixes": ["__"] }]
+            }
+        ]
     }
 }
