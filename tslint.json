@@ -6,6 +6,7 @@
         "exported-namespace-members": true,
         "type-parameter-name": true,
         "backing-field": true,
+        "no-redundant-jsdoc": true,
         "align": [true, "parameters", "statements"],
         "class-name": true,
         "comment-format": [false],
