@@ -41,6 +41,13 @@ Or:
 
 Enforces consistent naming style in interface and class declarations.
 
+#### Rule settings
+
+| Name                 | Type                         | Optional | Description                                       |
+| -------------------- | ---------------------------- | -------- | ------------------------------------------------- |
+| formatRules          | [FormatRule](#format-rule)[] | Optional | Format rules for class and interface members.     |
+| ignoreParentSuffixes | string[]                     | Optional | Ignores classes and interfaces with given suffix. |
+
 #### Format rule
 
 | Name            | Type                                                               | Optional | Default  |
@@ -76,15 +83,43 @@ C# coding style example.
 ```json
 "class-members-name": [
     true,
-    [
-        { "kind": "method", "modifier": "public", "format": "pascal-case" },
-        { "kind": "method", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "method", "modifier": "private", "format": "camel-case" },
-        { "kind": "property", "modifier": "public", "format": "pascal-case" },
-        { "kind": "property", "modifier": "protected", "format": "pascal-case" },
-        { "kind": "property", "modifier": "private", "format": "camel-case" }
-    ]
+    {
+        "formatRules": [
+            { "kind": "method", "modifier": "public", "format": "pascal-case" },
+            { "kind": "method", "modifier": "protected", "format": "pascal-case" },
+            { "kind": "method", "modifier": "private", "format": "camel-case" },
+            { "kind": "property", "modifier": "public", "format": "pascal-case" },
+            { "kind": "property", "modifier": "protected", "format": "pascal-case" },
+            { "kind": "property", "modifier": "private", "format": "camel-case" }
+        ]
+    }
 ]
+```
+
+Ignoring parent suffix example.
+
+```json
+"class-members-name": [
+    true,
+    {
+        "allowedPrefixes": ["Dto"]
+    }
+]
+```
+
+```ts 
+interface Foo {
+    _id: string;
+//  ~~~           [Declaration "_id" format is not correct (camel-case).]
+    full_name: string;
+//  ~~~~~~~~~           [Declaration "full_name" format is not correct (camel-case).]
+}
+
+interface FooDto {
+    _id: string;
+    full_name: string;
+}
+
 ```
 
 ### `const-variable-name`
@@ -177,7 +212,6 @@ export class Foo {
 //             ~~~~~~~~~   [Backing field can only be used in GetAccessor and SetAccessor.]
     }
 }
-
 ```
 
 #### Config example

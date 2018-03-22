@@ -4,7 +4,7 @@
         "class-members-name": [
             true,
             {
-                "formatRules": [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }]
+                "ignoreParentSuffixes": ["Dto"]
             }
         ]
     }

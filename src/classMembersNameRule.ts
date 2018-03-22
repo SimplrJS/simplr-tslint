@@ -26,21 +26,31 @@ enum MemberKind {
 interface FormatRule {
     kind: MemberKind;
     /**
-     * @default "public"
+     * Default "public"
      */
     modifier?: AccessModifier;
     /**
-     * @default "none"
+     * Default "none"
      */
     format?: Format;
     isStatic?: boolean;
     allowedPrefixes?: string[];
 }
 
-interface RuleOptions {
+function isRuleSettings(obj: Partial<RuleSettings>): obj is RuleSettings {
+    return obj.formatRules != null || obj.ignoreParentSuffixes != null;
+}
+
+interface RuleSettings {
+    formatRules?: FormatRule[];
+    ignoreParentSuffixes?: string[];
+}
+
+interface ResolvedRuleOptions {
     skipOriginChecking: boolean;
     defaultFormat?: Format;
     rules: FormatRule[];
+    ignoreParentSuffixes: string[];
     rawOptions: Lint.IOptions;
 }
 
@@ -114,10 +124,10 @@ namespace TsHelpers {
         return accessModifier;
     }
 
-    export type DeclarationWithHeritageClauses = ts.Declaration & { heritageClauses?: ts.NodeArray<ts.HeritageClause> };
+    export type ClassOrInterfaceDeclaration = ts.ClassDeclaration | ts.InterfaceDeclaration;
 
-    export function isDeclarationWithHeritageClauses(node: ts.Node): node is DeclarationWithHeritageClauses {
-        return (node as DeclarationWithHeritageClauses).heritageClauses != null;
+    export function isDeclarationWithHeritageClauses(node: ts.Node): node is ClassOrInterfaceDeclaration {
+        return (node as ClassOrInterfaceDeclaration).heritageClauses != null;
     }
 
     /**
@@ -127,7 +137,7 @@ namespace TsHelpers {
      */
     export function checkMemberNameInHeritageDeclarations(
         typeChecker: ts.TypeChecker,
-        node: TsHelpers.DeclarationWithHeritageClauses | undefined,
+        node: TsHelpers.ClassOrInterfaceDeclaration | undefined,
         targetName: string
     ): boolean {
         if (node == null) {
@@ -178,15 +188,16 @@ export class Rule extends Lint.Rules.TypedRule {
         return `Declaration "${name}" format is not correct (${neededCase}).`;
     }
 
-    private parseOptions(options: Lint.IOptions): RuleOptions {
+    private parseOptions(options: Lint.IOptions): ResolvedRuleOptions {
         const defaultFormat: Format = options.ruleArguments.find(x => Object.values(Format).find(y => y === x) != null);
         const skipOriginChecking: boolean = options.ruleArguments.findIndex(x => x === SKIP_ORIGIN_CHECKING) !== -1;
-        const formatRules: FormatRule[] | undefined = options.ruleArguments.find(x => Array.isArray(x));
+        const ruleSettings: RuleSettings = options.ruleArguments.find(x => isRuleSettings(x)) || {};
 
         return {
             defaultFormat: defaultFormat || Format.CamelCase,
             skipOriginChecking: skipOriginChecking,
-            rules: formatRules || [],
+            rules: ruleSettings.formatRules || [],
+            ignoreParentSuffixes: ruleSettings.ignoreParentSuffixes || [],
             rawOptions: options
         };
     }
@@ -201,7 +212,7 @@ type Dictionary<TValue = any> = { [key: string]: TValue };
 
 // The walker takes care of all the work.
 class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
-    constructor(sourceFile: ts.SourceFile, private ruleOptions: RuleOptions, program: ts.Program) {
+    constructor(sourceFile: ts.SourceFile, private ruleOptions: ResolvedRuleOptions, program: ts.Program) {
         super(sourceFile, ruleOptions.rawOptions, program);
     }
 
@@ -233,6 +244,7 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
             this.addFailure(this.createFailure(nameNode.getStart(), nameNode.getWidth(), Rule.failureMessageFactory(name, format), fix));
         }
     }
+
     //#endregion
 
     public visitMethodSignature(node: ts.MethodSignature): void {
@@ -277,29 +289,36 @@ class ClassMembersWalker extends Lint.ProgramAwareRuleWalker {
     }
 
     private checkDeclarationNameFormat(node: ts.Declaration, name: ts.Node, kind: MemberKind): void {
+        // Check if parent does not exist in ignore list.
+        const parent = node.parent as TsHelpers.ClassOrInterfaceDeclaration;
+        if (parent.name != null) {
+            const parentName = parent.name.getText();
+            const excluded = this.ruleOptions.ignoreParentSuffixes.findIndex(x => parentName.endsWith(x)) !== -1;
+
+            if (excluded) {
+                return;
+            }
+        }
+
         const searchOption: Partial<FormatRule> = {
             kind: kind,
             modifier: TsHelpers.resolveAccessModifierFromModifiers(node.modifiers) || AccessModifier.Public,
             isStatic: TsHelpers.modifierKindExistsInModifiers(node.modifiers, ts.SyntaxKind.StaticKeyword)
         };
 
-        const option = this.getFormatRule(searchOption);
-        if (option == null && this.ruleOptions.defaultFormat == null) {
+        // Resolve format rule
+        const formatRule = this.getFormatRule(searchOption);
+        if (formatRule == null && this.ruleOptions.defaultFormat == null) {
             return;
         }
 
-        const format: Format | undefined = option != null ? option.format : this.ruleOptions.defaultFormat;
-        const allowedPrefixes: string[] | undefined = option != null ? option.allowedPrefixes : undefined;
+        const format: Format | undefined = formatRule != null ? formatRule.format : this.ruleOptions.defaultFormat;
+        const allowedPrefixes: string[] | undefined = formatRule != null ? formatRule.allowedPrefixes : undefined;
 
         // Check if name is existing from heritage.
         if (
             this.ruleOptions.skipOriginChecking ||
-            (node.parent != null &&
-                !TsHelpers.checkMemberNameInHeritageDeclarations(
-                    this.getProgram().getTypeChecker(),
-                    node.parent as TsHelpers.DeclarationWithHeritageClauses,
-                    name.getText()
-                ))
+            (parent != null && !TsHelpers.checkMemberNameInHeritageDeclarations(this.getProgram().getTypeChecker(), parent, name.getText()))
         ) {
             this.checkNameNode(name, format, allowedPrefixes);
         }
