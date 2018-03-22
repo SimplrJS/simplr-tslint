@@ -209,7 +209,7 @@ export class Foo {
 
     public getFoo(): string {
         return this._foo;
-        //             ~~~~~~~~~   [Backing field can only be used in GetAccessor and SetAccessor.]
+//             ~~~~~~~~~   [Backing field can only be used in GetAccessor and SetAccessor.]
     }
 }
 ```
