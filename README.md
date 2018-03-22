@@ -58,6 +58,18 @@ Enforces consistent naming style in interface and class declarations.
 | isStatic        | boolean                                                            | Optional | false    |
 | allowedPrefixes | string[]                                                           | Optional |          |
 
+#### Default config
+
+```json
+"class-members-name": [
+    true,
+    {
+        "formatRules": [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }],
+        "ignoreParentSuffixes": ["Dto"]
+    }
+]
+```
+
 #### Config examples
 
 Enforces all members naming to `camel-case` format.
@@ -102,7 +114,7 @@ Ignoring parent suffix example.
 "class-members-name": [
     true,
     {
-        "allowedPrefixes": ["Dto"]
+        "ignoreParentSuffixes": ["Dto"]
     }
 ]
 ```

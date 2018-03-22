@@ -1,7 +1,13 @@
 {
     "rulesDirectory": ["rules"],
     "rules": {
-        "class-members-name": [true, [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }]],
+        "class-members-name": [
+            true,
+            {
+                "formatRules": [{ "kind": "property", "format": "camel-case", "allowedPrefixes": ["_"] }],
+                "ignoreParentSuffixes": ["Dto"]
+            }
+        ],
         "const-variable-name": [true, "only-primitives"],
         "exported-namespace-members": true,
         "type-parameter-name": true,
