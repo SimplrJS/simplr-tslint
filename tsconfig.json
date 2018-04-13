@@ -13,23 +13,10 @@
         "pretty": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
-        "lib": [
-            "es6",
-            "es2017.object"
-        ],
-        "types": [
-            "node"
-        ],
-        "typeRoots": [
-            "./node_modules/@types"
-        ]
+        "lib": ["es6", "es2017.object"],
+        "types": ["node"],
+        "typeRoots": ["./node_modules/@types"],
+        "plugins": [{ "name": "tslint-language-service" }]
     },
-    "exclude": [
-        "node_modules",
-        "rules",
-        "@types",
-        "test",
-        "examples",
-        "tools"
-    ]
+    "exclude": ["node_modules", "rules", "@types", "test", "examples", "tools"]
 }
