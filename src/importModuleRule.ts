@@ -3,33 +3,33 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 
 interface PathDetails {
-    Prefix: string;
-    Suffix: string;
-    ModuleName: string;
-    FullModuleName: string;
-    FileName: string;
+    prefix: string;
+    suffix: string;
+    moduleName: string;
+    fullModuleName: string;
+    fileName: string;
     splitPath: string[];
     withQuotes: boolean;
 }
 
 export class Rule extends Lint.Rules.AbstractRule {
-    public static readonly SEP: string = "/";
+    public static readonly sep: string = "/";
 
-    public static readonly SEARCH_MODULE_PATH: string = ["app", "modules"].join(Rule.SEP);
-    public static readonly SEARCH_MODULE_PATH_SPLITTER: string = Rule.SEARCH_MODULE_PATH + Rule.SEP;
+    public static readonly searchModulePath: string = ["app", "modules"].join(Rule.sep);
+    public static readonly searchModulePathSplitter: string = Rule.searchModulePath + Rule.sep;
 
-    public static readonly ENTRY_FAILURE_STRING: string = "Module should be imported from an entry file.";
-    public static readonly INSIDE_RELATIVE_FAILURE_STRING: string = "A relative import should be used inside the module.";
-    public static readonly INSIDE_ENTRY_FAILURE_STRING: string = "An entry file import should not be used inside the module.";
-    public static readonly FORBIDDEN_REEXPORT_ALL_FAILURE_STRING: string = "Forbidden 'export * from', use named re-exports.";
+    public static readonly entryFailureString: string = "Module should be imported from an entry file.";
+    public static readonly insideRelativeFailureString: string = "A relative import should be used inside the module.";
+    public static readonly insideEntryFailureString: string = "An entry file import should not be used inside the module.";
+    public static readonly forbiddenReexportAllFailureString: string = "Forbidden 'export * from', use named re-exports.";
 
-    public static readonly MODULE_FILENAME_SUFFIX: string = "-module";
+    public static readonly moduleFilenameSuffix: string = "-module";
 
-    public static readonly REEXPORT_PATH_REGEX: RegExp = /export[\s\S]*from[\s]*[\'\"](.*)[\'\"]/;
-    public static readonly REEXPORT_ALL_PATH_REGEX: RegExp = /export[\s\S]*\*/;
+    public static readonly reexportPathRegex: RegExp = /export[\s\S]*from[\s]*[\'\"](.*)[\'\"]/;
+    public static readonly reexportAllPathRegex: RegExp = /export[\s\S]*\*/;
 
-    public static RESOLVE_MODULE_FILENAME(moduleName: string): string {
-        return moduleName + this.MODULE_FILENAME_SUFFIX;
+    public static resolveModuleFilename(moduleName: string): string {
+        return moduleName + this.moduleFilenameSuffix;
     }
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -51,10 +51,10 @@ class ImportModuleWalker extends Lint.RuleWalker {
     ): Lint.Replacement {
 
         const resolvedImport = [
-            prefix + Rule.SEARCH_MODULE_PATH,
+            prefix + Rule.searchModulePath,
             moduleName,
             fullModuleName + quoteSymbol
-        ].join(Rule.SEP);
+        ].join(Rule.sep);
 
         return new Lint.Replacement(start, length, resolvedImport);
     }
@@ -71,18 +71,18 @@ class ImportModuleWalker extends Lint.RuleWalker {
         quoteSymbol: string
     ): Lint.Replacement {
 
-        const sourcePath = sourceSplitPath.slice(0, -1).join(Rule.SEP);
-        const importPath = importSplitPath.slice(0, -1).join(Rule.SEP);
+        const sourcePath = sourceSplitPath.slice(0, -1).join(Rule.sep);
+        const importPath = importSplitPath.slice(0, -1).join(Rule.sep);
 
         const relativePath = path.relative(sourcePath, importPath).split(path.sep);
         relativePath.push(importFileName);
 
-        let relativePathString = relativePath.join(Rule.SEP);
+        let relativePathString = relativePath.join(Rule.sep);
 
-        if (relativePathString[0] === Rule.SEP) {
+        if (relativePathString[0] === Rule.sep) {
             relativePathString = "." + relativePathString;
         } else if (relativePathString[0] !== ".") {
-            relativePathString = `.${Rule.SEP}${relativePathString}`;
+            relativePathString = `.${Rule.sep}${relativePathString}`;
         }
 
         const fixedPath = `${quoteSymbol}${relativePathString}${quoteSymbol}`;
@@ -94,8 +94,8 @@ class ImportModuleWalker extends Lint.RuleWalker {
      * Generate path details object from pathname.
      */
     private parsePathDetails(pathname: string, withQuotes: boolean = true): PathDetails {
-        const [prefix, suffix] = pathname.split(Rule.SEARCH_MODULE_PATH_SPLITTER);
-        const [moduleName, ...importSplitPath] = suffix.split(Rule.SEP);
+        const [prefix, suffix] = pathname.split(Rule.searchModulePathSplitter);
+        const [moduleName, ...importSplitPath] = suffix.split(Rule.sep);
 
         if (withQuotes) {
             importSplitPath[importSplitPath.length - 1] = importSplitPath[importSplitPath.length - 1].slice(0, -1);
@@ -104,12 +104,12 @@ class ImportModuleWalker extends Lint.RuleWalker {
         const [fileName] = importSplitPath.slice(-1);
 
         return {
-            Prefix: prefix,
-            Suffix: suffix,
-            ModuleName: moduleName,
-            FullModuleName: Rule.RESOLVE_MODULE_FILENAME(moduleName),
+            prefix: prefix,
+            suffix: suffix,
+            moduleName: moduleName,
+            fullModuleName: Rule.resolveModuleFilename(moduleName),
             splitPath: importSplitPath,
-            FileName: fileName,
+            fileName: fileName,
             withQuotes: withQuotes
         };
     }
@@ -118,8 +118,8 @@ class ImportModuleWalker extends Lint.RuleWalker {
      * Validate import line.
      */
     private startValidating(sourceFile: string, importFile: string, importStart: number, quote: string = ""): void {
-        const sourceFileIsFromModule = sourceFile.indexOf(Rule.SEARCH_MODULE_PATH) > -1;
-        const importFileIsFromModule = importFile.indexOf(Rule.SEARCH_MODULE_PATH) > -1;
+        const sourceFileIsFromModule = sourceFile.indexOf(Rule.searchModulePath) > -1;
+        const importFileIsFromModule = importFile.indexOf(Rule.searchModulePath) > -1;
 
         if (!sourceFileIsFromModule && !importFileIsFromModule) {
             return;
@@ -131,12 +131,12 @@ class ImportModuleWalker extends Lint.RuleWalker {
             // Check if source file is from module
             if (sourceFileIsFromModule) {
                 const sourceDetails = this.parsePathDetails(sourceFile, false);
-                const importFileName = importFile.split(Rule.SEP).slice(-1)[0].slice(0, -1);
-                const targetFileName = sourceDetails.FullModuleName;
+                const importFileName = importFile.split(Rule.sep).slice(-1)[0].slice(0, -1);
+                const targetFileName = sourceDetails.fullModuleName;
 
                 // Check if module itself doesn't import from entry file
                 if (importFileName === targetFileName) {
-                    this.addFailureAt(importStart, importFile.length, Rule.INSIDE_ENTRY_FAILURE_STRING);
+                    this.addFailureAt(importStart, importFile.length, Rule.insideEntryFailureString);
                 }
             }
             return;
@@ -145,38 +145,38 @@ class ImportModuleWalker extends Lint.RuleWalker {
         const importDetails = this.parsePathDetails(importFile, Boolean(quote));
         if (sourceFileIsFromModule && importFileIsFromModule) {
             const sourceDetails = this.parsePathDetails(sourceFile, false);
-            if (sourceDetails.ModuleName === importDetails.ModuleName) {
+            if (sourceDetails.moduleName === importDetails.moduleName) {
                 const fix = this.importWithRelativePathFixer(
                     importStart,
                     importFile.length,
-                    importDetails.FileName,
+                    importDetails.fileName,
                     sourceDetails.splitPath,
                     importDetails.splitPath,
                     quote
                 );
-                this.addFailureAt(importStart, importFile.length, Rule.INSIDE_RELATIVE_FAILURE_STRING, fix);
+                this.addFailureAt(importStart, importFile.length, Rule.insideRelativeFailureString, fix);
                 return;
             }
         }
 
-        if (importFileIsFromModule && (importDetails.splitPath.length > 1 || importDetails.FullModuleName !== importDetails.FileName)) {
+        if (importFileIsFromModule && (importDetails.splitPath.length > 1 || importDetails.fullModuleName !== importDetails.fileName)) {
             const fix = this.importEntryFileFixer(
                 importStart,
                 importFile.length,
-                importDetails.Prefix,
-                importDetails.ModuleName,
-                importDetails.FullModuleName,
+                importDetails.prefix,
+                importDetails.moduleName,
+                importDetails.fullModuleName,
                 quote
             );
-            this.addFailureAt(importStart, importFile.length, Rule.ENTRY_FAILURE_STRING, fix);
+            this.addFailureAt(importStart, importFile.length, Rule.entryFailureString, fix);
             return;
         }
     }
 
     private startValidatingReExportAll(fullText: string, sourceFile: string, node: ts.Statement): void {
-        const sourceFileIsFromModule = sourceFile.indexOf(Rule.SEARCH_MODULE_PATH) > -1;
-        if (sourceFileIsFromModule && Rule.REEXPORT_ALL_PATH_REGEX.test(fullText)) {
-            this.addFailureAtNode(node, Rule.FORBIDDEN_REEXPORT_ALL_FAILURE_STRING);
+        const sourceFileIsFromModule = sourceFile.indexOf(Rule.searchModulePath) > -1;
+        if (sourceFileIsFromModule && Rule.reexportAllPathRegex.test(fullText)) {
+            this.addFailureAtNode(node, Rule.forbiddenReexportAllFailureString);
         }
     }
 
@@ -207,7 +207,7 @@ class ImportModuleWalker extends Lint.RuleWalker {
                 .forEach(statement => {
                     const text = statement.getFullText();
 
-                    const regexResult = Rule.REEXPORT_PATH_REGEX.exec(text);
+                    const regexResult = Rule.reexportPathRegex.exec(text);
                     if (regexResult == null) {
                         return;
                     }
