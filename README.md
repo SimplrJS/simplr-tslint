@@ -14,6 +14,32 @@ To get latest tslint config.
 npm install simplr-tslint@next --save-dev
 ```
 
+### Language service
+
+We recommend using this plugin [tslint-language-service](https://github.com/angelozerr/tslint-language-service/).
+
+1. Add plugin to `tsconfig.json`
+
+```json
+{
+    "compilerOptions": {
+        "plugins": [
+            {
+                "name": "tslint-language-service",
+                "alwaysShowRuleFailuresAsWarnings": true,
+                "ignoreDefinitionFiles": true
+            }
+        ]
+    }
+}
+```
+2. Use workspace TypeScript version
+
+![image](https://user-images.githubusercontent.com/562658/38887298-20fcf1b6-4281-11e8-9bf9-5fdba61a1159.png)
+
+![image](https://user-images.githubusercontent.com/562658/38887343-3fbb26a4-4281-11e8-9e7d-4bd62eabd82e.png)
+
+
 ## How to use?
 
 Add this line in your `tslint.json` file:
