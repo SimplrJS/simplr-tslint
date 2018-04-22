@@ -93,7 +93,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
         }
 
         if (classDeclaration == null || !this.isMemberOfClassDeclaration(classDeclaration, name)) {
-            return;   
+            return;
         }
 
         if (accessor != null) {
