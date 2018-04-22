@@ -5,9 +5,9 @@ import * as changeCase from "change-case";
 const BACKING_FIELD_PREFIX = "_";
 
 export class Rule extends Lint.Rules.AbstractRule {
-    public static readonly usageFailureMessage: string = "Backing field can only be used in GetAccessor and SetAccessor.";
+    public static readonly usageFailureMessage: string = "Backing field can only be used in getter and setter.";
     public static accessorFailureMessageFactory(expectedName: string): string {
-        return `Expected accessor name is "${expectedName}".`;
+        return `Accessor name must be the same as a backing field. Expected name "${expectedName}".`;
     }
 
     public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -74,37 +74,43 @@ class BackingFieldsWalker extends Lint.RuleWalker {
 
         let currentParentNode: ts.Node | undefined = node.parent;
         let classDeclaration: ts.ClassDeclaration | undefined;
+        let accessor: ts.GetAccessorDeclaration | ts.SetAccessorDeclaration | undefined;
         while (currentParentNode != null) {
             if (ts.isGetAccessorDeclaration(currentParentNode) || ts.isSetAccessorDeclaration(currentParentNode)) {
-                const accessorNameNode = currentParentNode.name;
-                const casedAccessorName = changeCase.camelCase(accessorNameNode.getText());
-
-                if (!this.accessorNameEquals(casedAccessorName, name)) {
-                    const expectedAccessorName = this.removePrefix(name);
-                    const accessorNameNodeStart = accessorNameNode.getStart();
-                    const accessorNameNodeWidth = accessorNameNode.getWidth();
-                    const fix = new Lint.Replacement(accessorNameNodeStart, accessorNameNodeWidth, expectedAccessorName);
-
-                    this.addFailureAt(
-                        accessorNameNodeStart,
-                        accessorNameNodeWidth,
-                        Rule.accessorFailureMessageFactory(expectedAccessorName),
-                        fix
-                    );
-                }
-
-                return;
+                accessor = currentParentNode;
             }
 
             if (ts.isClassDeclaration(currentParentNode)) {
                 classDeclaration = currentParentNode;
+                break;
             }
 
             currentParentNode = currentParentNode.parent;
         }
 
-        // Backing field can only be used in GetAccessor and SetAccessor declarations.
-        if (classDeclaration != null && this.isMemberOfClassDeclaration(classDeclaration, name)) {
+        if (classDeclaration == null || !this.isMemberOfClassDeclaration(classDeclaration, name)) {
+            return;   
+        }
+
+        if (accessor != null) {
+            const accessorNameNode = accessor.name;
+            const casedAccessorName = changeCase.camelCase(accessorNameNode.getText());
+
+            if (!this.accessorNameEquals(casedAccessorName, name)) {
+                const expectedAccessorName = this.removePrefix(name);
+                const accessorNameNodeStart = accessorNameNode.getStart();
+                const accessorNameNodeWidth = accessorNameNode.getWidth();
+                const fix = new Lint.Replacement(accessorNameNodeStart, accessorNameNodeWidth, expectedAccessorName);
+
+                this.addFailureAt(
+                    accessorNameNodeStart,
+                    accessorNameNodeWidth,
+                    Rule.accessorFailureMessageFactory(expectedAccessorName),
+                    fix
+                );
+            }
+        } else if (classDeclaration != null) {
+            // Backing field can only be used in GetAccessor and SetAccessor declarations.
             this.addFailureAtNode(node, Rule.usageFailureMessage);
         }
     }
