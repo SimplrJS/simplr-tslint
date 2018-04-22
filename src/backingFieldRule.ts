@@ -66,9 +66,13 @@ class BackingFieldsWalker extends Lint.RuleWalker {
 
     public visitPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
         super.visitPropertyAccessExpression(node);
-        const name = node.name.getText();
+        // "this._something"
+        if (node.expression.kind !== ts.SyntaxKind.ThisKeyword) {
+            return;
+        }
 
-        if (!this.checkPropertyPrefix(name) || node.expression.kind !== ts.SyntaxKind.ThisKeyword) {
+        const name = node.name.getText();
+        if (!this.checkPropertyPrefix(name)) {
             return;
         }
 
