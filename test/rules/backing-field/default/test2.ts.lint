@@ -2,7 +2,7 @@ export class Foo {
     constructor(private _bar: string) {}
 
     public get barName(): string {
-               ~~~~~~~              [Expected accessor name is "bar".]
+               ~~~~~~~              [Accessor name must be the same as a backing field. Expected name "bar".]
         return this._bar;
     }
 }
