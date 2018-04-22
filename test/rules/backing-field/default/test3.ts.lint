@@ -1,0 +1,18 @@
+export interface Foo {
+    _id: string;
+}
+
+export class Bar {
+    constructor(private readonly foo) {}
+
+    private _id: string | undefined;
+
+    public get barId(): string {
+               ~~~~~              [Accessor name must be the same as a backing field. Expected name "id".]
+        return this._id;
+    }
+
+    public get fooId(): string {
+        return this.foo._id;
+    }
+}
