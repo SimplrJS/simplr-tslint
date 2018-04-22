@@ -113,7 +113,7 @@ class BackingFieldsWalker extends Lint.RuleWalker {
                     fix
                 );
             }
-        } else if (classDeclaration != null) {
+        } else {
             // Backing field can only be used in GetAccessor and SetAccessor declarations.
             this.addFailureAtNode(node, Rule.usageFailureMessage);
         }
