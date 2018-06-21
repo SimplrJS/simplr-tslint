@@ -17,8 +17,12 @@ npm install simplr-tslint@next --save-dev
 ### Language service
 
 We recommend using this plugin [tslint-language-service](https://github.com/angelozerr/tslint-language-service/).
+1. Install plugin
+```
+npm install tslint-language-service -D
+```
 
-1. Add plugin to `tsconfig.json`
+2. Add plugin to `tsconfig.json`
 
 ```json
 {
@@ -33,7 +37,7 @@ We recommend using this plugin [tslint-language-service](https://github.com/ange
     }
 }
 ```
-2. Use workspace TypeScript version
+3. Use workspace TypeScript version
 
 ![image](https://user-images.githubusercontent.com/562658/38887298-20fcf1b6-4281-11e8-9bf9-5fdba61a1159.png)
 
