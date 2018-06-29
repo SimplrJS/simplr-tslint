@@ -16,7 +16,13 @@
         "lib": ["es6", "es2017.object"],
         "types": ["node"],
         "typeRoots": ["./node_modules/@types"],
-        "plugins": [{ "name": "tslint-language-service" }]
+        "plugins": [
+            {
+                "name": "tslint-language-service",
+                "alwaysShowRuleFailuresAsWarnings": true,
+                "ignoreDefinitionFiles": true
+            }
+        ]
     },
     "exclude": ["node_modules", "rules", "@types", "test", "examples", "tools"]
 }
