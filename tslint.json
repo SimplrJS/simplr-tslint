@@ -103,7 +103,8 @@
             ["Object", "Use `{}` instead."],
             ["object", "Use `{}` instead."],
             ["Function", "Use `() => void` instead."],
-            ["any"]
-        ]
+            ["String", "Don't use 'String' as a type. Use 'string' instead."]
+        ],
+        "no-any": true
     }
 }
