@@ -97,6 +97,14 @@
             "check-separator",
             "check-type",
             "check-typecast"
-        ]
+        ],
+        "ban-types": [
+            true,
+            ["Object", "Use `{}` instead."],
+            ["object", "Use `{}` instead."],
+            ["Function", "Use `() => void` instead."],
+            ["String", "Don't use 'String' as a type. Use 'string' instead."]
+        ],
+        "no-any": true
     }
 }

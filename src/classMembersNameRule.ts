@@ -208,6 +208,7 @@ export class Rule extends Lint.Rules.TypedRule {
     }
 }
 
+// tslint:disable-next-line:no-any
 type Dictionary<TValue = any> = { [key: string]: TValue };
 
 // The walker takes care of all the work.

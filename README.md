@@ -2,6 +2,13 @@
 
 A set of [TSLint](https://palantir.github.io/tslint/) rules used in SimplrJS projects.
 
+[![Build Status](https://travis-ci.org/SimplrJS/simplr-tslint.svg?branch=master)](https://travis-ci.org/SimplrJS/simplr-tslint)
+[![NPM version](http://img.shields.io/npm/v/simplr-tslint.svg)](https://www.npmjs.com/package/simplr-tslint) 
+[![npm (tag)](https://img.shields.io/npm/v/simplr-tslint/next.svg)](https://www.npmjs.com/package/simplr-tslint)
+[![dependencies Status](https://david-dm.org/simplrjs/simplr-tslint/status.svg)](https://david-dm.org/simplrjs/simplr-tslint) 
+[![devDependencies Status](https://david-dm.org/simplrjs/simplr-tslint/dev-status.svg)](https://david-dm.org/simplrjs/simplr-tslint?type=dev)
+
+
 ## Get started
 
 ```sh
