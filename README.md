@@ -266,7 +266,7 @@ export class Foo {
 #### Config example
 
 ```json
-"type-parameter-name": true
+"backing-field": true
 ```
 
 ## License
