@@ -6,8 +6,8 @@
     "scripts": {
         "build": "tsc -p .",
         "watch": "tsc -p . -w",
+        "pretest": "tslint -p .",
         "test": "tslint --test test/rules/*/*",
-        "tslint": "tslint -p .",
         "prepublishOnly": "npm run build",
         "travis-release": "node ./tools/travis-release/release.js"
     },
